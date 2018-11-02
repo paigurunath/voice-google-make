@@ -1,0 +1,31 @@
+{
+    
+    "development": {
+        "username": "root",
+        "password": "root",
+        "database": "voice",
+        "host": "localhost",
+        "dialect": "mysql",
+        "port": 3306,
+        "logging": false,
+        "pool": {
+            "max": 10,
+            "min": 1,
+            "idle": 100000
+        }
+    },
+    "dev": {
+        "username": "root",
+        "password": "root",
+        "database": "voice",
+        "host": "localhost",
+        "dialect": "mysql",
+        "port": 3306,
+        "logging": false,
+        "pool": {
+            "max": 10,
+            "min": 1,
+            "idle": 100000
+        }
+    }
+}

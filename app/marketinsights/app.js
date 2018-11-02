@@ -2,12 +2,10 @@
 
 // Import the Dialogflow module from the Actions on Google client library.
 const {
-    dialogflow,
-    BasicCard,
-    Image,
-    Button,
     SimpleResponse
 } = require('actions-on-google');
+
+const dialogflow = require('actions-on-google').dialogflow;
 
 const Contexts = {
     NOTES: 'notes',
