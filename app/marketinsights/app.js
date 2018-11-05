@@ -1,24 +1,9 @@
 'use strict';
 
 // Import the Dialogflow module from the Actions on Google client library.
-const {
-    SimpleResponse
-} = require('actions-on-google');
+const SimpleResponse = require('actions-on-google').SimpleResponse;
 
 const dialogflow = require('actions-on-google').dialogflow;
-
-// const Contexts = {
-//     NOTES: 'notes',
-//     COMMENTARY: 'commentary'
-// };
-
-// const contextParameters = {
-//     commentary: 'commentary',
-// };
-
-// const contextParametersNotes = {
-//     notes: 'notes',
-// };
 
 const lodash = require('lodash');
 const welcome = require("./responses/welcome");
@@ -60,7 +45,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     console.log('before user : ' + USER_TYPE);
 
-    // var promiseObj = new Promise(function(resolve, reject) {
+    var promiseObj = new Promise(function(resolve, reject) {
         db.user.findOne({
         where: {
             user_id: userIdVal
@@ -71,7 +56,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
             if(person) { 
                 // update
-                console.log('update');
+                console.log('update visit top');
                 // return obj.update(values);
                 visitVal = person.visit + 1;
                 db.user.update(
@@ -81,11 +66,11 @@ app.intent('Default Welcome Intent', (conv) => {
                 .then(function(rowsUpdated) {
                     console.log('updated visit');
                     console.log(rowsUpdated);
-                    // resolve();
+                    resolve();
 
                 }).catch(err => {
                     console.log('error in updating user visit');
-                    // reject();
+                    reject();
                 })
             } else { // insert
                 console.log('insert');
@@ -95,34 +80,38 @@ app.intent('Default Welcome Intent', (conv) => {
                     visit:1
                 }).then(output => {
                     console.log("user record inserted request");
-                    // resolve();
+                    resolve();
                 }).catch(err => {
                     console.log('Error in storing the user id record');
                     console.log(err);
-                    // reject()
+                    reject()
                 }) ;
             }
 
             // resolve();
         }).catch(err => {
-        console.log('Error in checking user id');
-        console.log(err);
-        // reject();
+            console.log('Error in checking user id');
+            console.log(err);
+            reject();
         });
 
-    // });
-    helper.card(conv, welcome[USER_TYPE]);
-    // console.log('after user : ' + USER_TYPE);
-    // promiseObj.then(function() {
-    //     console.log('in promise then');
-    //     helper.card(conv, welcome[USER_TYPE]);
+    });
+    // helper.card(conv, welcome[USER_TYPE]);
+    console.log('after user : ' + USER_TYPE);
+    return promiseObj.then(function() {
+        console.log('in promise then');
+
+        USER_TYPE = visitVal < 2 ? 'newUser' : 'returningUser'
+        console.log(visitVal + ' visit count final ' + USER_TYPE + ' is the final ');
+
+        helper.card(conv, welcome[USER_TYPE]);
         
-    //   })
-    //   .catch(function(err) {
-    //     console.log('in promise catch');
-    //     console.log(err);
-    //     helper.card(conv, welcome[USER_TYPE]);
-    //   });
+      })
+      .catch(function(err) {
+        console.log('in promise catch');
+        console.log(err);
+        helper.card(conv, welcome[USER_TYPE]);
+      });
     
 });
 
