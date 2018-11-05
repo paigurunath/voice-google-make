@@ -86,7 +86,10 @@ module.exports = {
     playAudio(conv) {
 
         console.log("in play audio");
-        var speechTxt = utils.addAudio("", notes.stories.audio, notes.intro.altText);
+        // var speechTxt = utils.addAudio("", notes.stories.audio, notes.intro.altText);
+        // speechTxt = utils.addSpeak(speechTxt);
+
+        var speechTxt = 'Notes';
         speechTxt = utils.addSpeak(speechTxt);
 
         conv.ask(new SimpleResponse({
@@ -197,6 +200,75 @@ module.exports = {
                 speech:speechTxt,
                 text: '',
             }));
+        }
+    },
+
+    getFallbackIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+        console.log('in Default Fallback Intent intent');
+
+        if(conv.user.storage.convstate.toString().trim() == 'notes') {
+
+            conv.user.storage.generalError = 0;
+            this.getHelpIntent(conv);
+            
+        } else if(conv.user.storage.convstate.toString().trim() == 'commentary') {
+
+            const commentaryError = conv.user.storage.commentaryError || 0;
+            conv.user.storage.commentaryError = (parseInt(commentaryError, 10) <= 0) ? 1 : parseInt(commentaryError, 10) + 1;
+
+            if (!commentaryError) {
+                this.createSimpleResponseObj(conv, lodash.sample(commentary.invalid.first), commentary.invalid.altText);
+            } else if (commentaryError < 2) {
+                this.createSimpleResponseObj(conv, lodash.sample(commentary.invalid.second), commentary.invalid.altText);
+            } else {
+                this.getHelpIntent(conv);
+            }
+        } else {
+
+            const generalError = conv.user.storage.generalError || 0;
+            conv.user.storage.generalError = (parseInt(generalError, 10) <= 0) ? 1 : parseInt(generalError, 10) + 1;
+
+            if (generalError < 2) {
+                this.createSimpleResponseObj(conv, lodash.sample(unhandled.prompt), unhandled.altText);
+            } else {
+                this.getHelpIntent(conv);
+            }
+        }
+
+
+        if(conv.user.storage.generalError) {
+            console.log("general 1");
+            if( conv.user.storage.generalError === 'undefined') {
+                console.log("general 2");
+                conv.user.storage.generalError = 1
+
+                var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
+                speechTxt = utils.addSpeak(speechTxt);
+
+                conv.close(new SimpleResponse({
+                    speech: speechTxt,
+                    text: '',
+                }));
+
+            } else if(parseInt(conv.user.storage.generalError, 10) < 2) {
+
+                console.log("general 3");
+                conv.user.storage.generalError = parseInt(conv.user.storage.generalError, 10) +  1;
+
+                var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
+                speechTxt = utils.addSpeak(speechTxt);
+
+                conv.close(new SimpleResponse({
+                    speech: speechTxt,
+                    text: '',
+                }));
+            }
+            
+        }  else {
+            this.getHelpIntent(conv);
         }
     }
 };

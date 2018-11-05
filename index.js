@@ -28,6 +28,21 @@ const expressApp = express().use(bodyParser.json())
 
 //third middleware
 // expressApp.use((request,next,cb)=>{
+
+marketInsights.middleware((conv) => {
+    console.log('-----------------------from middleware--------------------------')
+    console.log(JSON.stringify(conv));
+    console.log('-----------------------from middleware--------------------------')
+    db.voicedata.create({
+        logdata: JSON.stringify(conv)
+      }).then(output => {
+          console.log("log inserted request");
+      }).catch(err => {
+          console.log('Error in storing the request log record');
+          console.log(err);
+      }) ;
+});
+
 expressApp.use((request,response, next)=>{
     console.log('--------------------------------------------------request------------------------------');
     console.log(JSON.stringify(request.body));
@@ -43,22 +58,7 @@ expressApp.use((request,response, next)=>{
       }) ;
 
     next();
-    // console.log('--------------------------------------------------response------------------------------');
-    // console.log(response.socket['body']);
-    // console.log(JSON.stringify(response.req.body));
-    // console.log(response.res);
-    // console.log('--------------------------------------------------response------------------------------');
-
-    // next(request, function(err, response) {
-
-    //     console.log('--------------------------------------------------response------------------------------');
-    //     // console.log(response.socket['body']);
-    //     // console.log(JSON.stringify(response.req.body));
-    //     console.log(response);
-    //     // console.log(response.res);
-    //     console.log('--------------------------------------------------response------------------------------');
-    //     cb(err,response);
-    // });
+   
 });
 
 expressApp.use(logResponseBody);
@@ -106,25 +106,6 @@ function logResponseBody(req, res, next) {
   next();
 }
 
-
-
-// function modifyResponseBody(req, res, next) {
-//     var oldSend = res.send;
-
-//     console.log('--------------------------------------------------response------------------------------');
-//     console.log(oldSend);
-//     console.log('--------------------------------------------------response------------------------------');
-//     res.send = function(data){
-//         // arguments[0] (or `data`) contains the response body
-//         arguments[0] = "modified : " + arguments[0];
-        
-//         oldSend.apply(res, arguments);
-//     }
-//     next();
-// }
-
-// expressApp.use(modifyResponseBody);
-
 // expressApp.listen(process.env.PORT);
 // expressApp.listen(80)
 // Start server
@@ -134,4 +115,4 @@ expressApp.listen(port, function () {
     console.log("Server started.");
     console.log('*******************************');
   
-  });
+});

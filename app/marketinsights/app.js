@@ -372,9 +372,14 @@ app.intent('PlayClipForIntent', (conv) => {
 });
 
 app.intent('PauseIntent', (conv) => {
+    console.log('in PauseIntent');
+
     conv.data.previousIntent = conv.data.currentIntent;
     conv.data.currentIntent = conv.intent;
+
+    //sending to unhandled intent test whether it is working.
     //paste unhandled code
+    helper.getFallbackIntent(conv);
 });
 
 app.intent('ResumeIntent', (conv) => {
@@ -396,71 +401,7 @@ app.intent('ResumeIntent', (conv) => {
 
 // app.intent('Default Fallback Intent', (conv) => {
 app.fallback((conv) => {
-    conv.data.previousIntent = conv.data.currentIntent;
-    conv.data.currentIntent = conv.intent;
-    console.log('in Default Fallback Intent intent');
-
-    if(conv.user.storage.convstate.toString().trim() == 'notes') {
-
-        conv.user.storage.generalError = 0;
-        helper.getHelpIntent(conv);
-        
-    } else if(conv.user.storage.convstate.toString().trim() == 'commentary') {
-
-        const commentaryError = conv.user.storage.commentaryError || 0;
-        conv.user.storage.commentaryError = (parseInt(commentaryError, 10) <= 0) ? 1 : parseInt(commentaryError, 10) + 1;
-
-        if (!commentaryError) {
-            helper.createSimpleResponseObj(conv, lodash.sample(commentary.invalid.first), commentary.invalid.altText);
-		} else if (commentaryError < 2) {
-            helper.createSimpleResponseObj(conv, lodash.sample(commentary.invalid.second), commentary.invalid.altText);
-		} else {
-			helper.getHelpIntent(conv);
-		}
-    } else {
-
-        const generalError = conv.user.storage.generalError || 0;
-        conv.user.storage.generalError = (parseInt(generalError, 10) <= 0) ? 1 : parseInt(generalError, 10) + 1;
-
-        if (generalError < 2) {
-            helper.createSimpleResponseObj(conv, lodash.sample(unhandled.prompt), unhandled.altText);
-		} else {
-			helper.getHelpIntent(conv);
-        }
-    }
-
-
-    if(conv.user.storage.generalError) {
-        console.log("general 1");
-        if( conv.user.storage.generalError === 'undefined') {
-            console.log("general 2");
-            conv.user.storage.generalError = 1
-
-            var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
-            speechTxt = utils.addSpeak(speechTxt);
-
-            conv.close(new SimpleResponse({
-                speech: speechTxt,
-                text: '',
-            }));
-
-        } else if(parseInt(conv.user.storage.generalError, 10) < 2) {
-
-            console.log("general 3");
-            conv.user.storage.generalError = parseInt(conv.user.storage.generalError, 10) +  1;
-
-            var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
-            speechTxt = utils.addSpeak(speechTxt);
-
-            conv.close(new SimpleResponse({
-                speech: speechTxt,
-                text: '',
-            }));
-        }
-        
-    }  else {
-        helper.getHelpIntent(conv);
-    }
+    helper.getFallbackIntent(conv);  
 });
 
 //HelpIntent
