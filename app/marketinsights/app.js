@@ -43,7 +43,10 @@ const response = [];
 
 //welcomeuser intent implementation from welcome.js
 app.intent('Default Welcome Intent', (conv) => {
-    console.log("welcome");
+    console.log("welcome" + conv.intent);
+
+    conv.data.currentIntent = conv.intent;
+    conv.data.previousIntent = conv.intent;
 
     console.log('--------------------conv-----------------------');
     console.log(JSON.stringify(conv));
@@ -155,12 +158,17 @@ app.intent('Default Welcome Intent', (conv) => {
 
 app.intent('DisclosuresIntent', (conv) => {
     console.log('in DisclosuresIntent');
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+    
     helper.card(conv, disclosures);
 });
 
 // PlayNotesIntent and redirected NotesOnTheWeekAheadIntent implementation from notes.js
 app.intent('NotesOnTheWeekAheadIntent', (conv) => {
 
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     //managing conversation state
     //if(conv.user.storage.convstate) {
     conv.user.storage.convstate = 'notes';
@@ -187,6 +195,10 @@ app.intent('NotesOnTheWeekAheadIntent', (conv) => {
 
 //YesIntent 
 app.intent('YesIntent', (conv) => {
+    
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log('in yes intent');
 
     if (!conv.surface.capabilities.has("actions.capability.MEDIA_RESPONSE_AUDIO")) {
@@ -200,6 +212,9 @@ app.intent('YesIntent', (conv) => {
 //PlayCommentary
 app.intent('CommentaryIntent', (conv, params) => {
    
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in comentary");
     conv.user.storage.convstate = 'commentary';
 
@@ -217,6 +232,9 @@ app.intent('CommentaryIntent', (conv, params) => {
 //PlayCommentary
 app.intent('NextMessageIntent', (conv) => {
  
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in NextMessageIntent");
     conv.user.storage.convstate = 'commentary';
 
@@ -239,6 +257,9 @@ app.intent('NextMessageIntent', (conv) => {
 //PlayAgainIntent
 app.intent('PlayAgainIntent', (conv) => {
  
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in PlayAgainIntent");
     conv.user.storage.convstate = 'commentary';
 
@@ -259,6 +280,8 @@ app.intent('PlayAgainIntent', (conv) => {
 
 //easterEggs complete , pending is redirection and template
 app.intent('AboutDrKellyIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in davi kelly ')
     //adding SPEECH
     var speechTxt = utils.addAudio("", aboutDr.prompt, aboutDr.altText);
@@ -276,6 +299,8 @@ app.intent('AboutDrKellyIntent', (conv) => {
 });
 
 app.intent('QuoteIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in quote ')
     //adding SPEECH
     var speechTxt = utils.addAudio("", lodash.sample(quote.prompt), quote.altText);
@@ -293,6 +318,8 @@ app.intent('QuoteIntent', (conv) => {
 });
 
 app.intent('WhatIsThisIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in what is this quote ')
     //adding SPEECH
     var speechTxt = utils.addAudio("", whatIsThis.prompt, whatIsThis.altText);
@@ -311,21 +338,29 @@ app.intent('WhatIsThisIntent', (conv) => {
 
 //NoIntent 
 app.intent('NoIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in no intent');
     helper.stop(conv);
 });
 
 app.intent('CancelIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in cancel intent');
     helper.stop(conv);
 });
 
 app.intent('StopIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in stop intent from helper js');
     helper.stop(conv);
 });
 
 app.intent('KeepReadingIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in KeepReadingIntent');
     helper.stop(conv);
 });
@@ -333,6 +368,9 @@ app.intent('KeepReadingIntent', (conv) => {
 
 app.intent('PlayClipForIntent', (conv) => {
    
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in PlayClipForIntent");
 
     conv.user.storage.convstate = 'commentary';
@@ -345,10 +383,14 @@ app.intent('PlayClipForIntent', (conv) => {
 });
 
 app.intent('PauseIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     //paste unhandled code
 });
 
 app.intent('ResumeIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
 
     //check to get the offset and use mediaresponse
     console.log('in ResumeIntent');
@@ -365,6 +407,8 @@ app.intent('ResumeIntent', (conv) => {
 
 // app.intent('Default Fallback Intent', (conv) => {
 app.fallback((conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log('in Default Fallback Intent intent');
 
     if(conv.user.storage.convstate.toString().trim() == 'notes') {
@@ -432,6 +476,8 @@ app.fallback((conv) => {
 
 //HelpIntent
 app.intent('HelpIntent', (conv) => {
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
     console.log("in help intent");
     helper.getHelpIntent(conv);
 });
