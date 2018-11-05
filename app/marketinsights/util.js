@@ -2,7 +2,7 @@
 //add audio
 exports.addAudio = function(pretext, prompt, altText){
     var pretext = pretext.toString();
-    var audioStr = `<audio src="${prompt.toString()}" >${altText.toString()}</audio>`;
+    var audioStr = `<audio src='${prompt.toString()}' >${altText.toString()}</audio>`;
 
     pretext = pretext + audioStr;
 
@@ -13,7 +13,7 @@ exports.addAudio = function(pretext, prompt, altText){
 exports.addBreak = function(pretext, timeInMiliSeconds){
     //<break time="3s"/>
     var pretext = pretext.toString();
-    var audioStr = `<break time="${timeInMiliSeconds.toString()}" />`;
+    var audioStr = `<break time='${timeInMiliSeconds.toString()}' />`;
 
     pretext = pretext + audioStr;
 

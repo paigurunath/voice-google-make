@@ -104,7 +104,7 @@ module.exports = {
             }),
         }));
 
-        return conv.ask(new Suggestions("Test next feature"));
+        return conv.ask(new Suggestions("Notes"));
     },
 
     createSimpleResponseObj(conv, audioObj, audioTxt) {
@@ -125,26 +125,35 @@ module.exports = {
         var selectedNumber = parseInt(commentaryId, 10);
         const selectedCommentary = commentariesById[selectedNumber];
 
-        //create the object to be stored in session
-        var commentaryObj = {
-            "commentaryError": 0,
-            "commentary": selectedNumber,
-            "commentaryNumber": selectedNumber
+        console.log("from selected commentary");
+        console.log(selectedCommentary);
+
+        if(selectedCommentary) {
+            //create the object to be stored in session
+            var commentaryObj = {
+                "commentaryError": 0,
+                "commentary": selectedNumber,
+                "commentaryNumber": selectedNumber
+            }
+
+            //store the object in session
+            conv.data.commentaryObj = commentaryObj;
+            console.log('selected one object : ' + JSON.stringify(selectedCommentary));
+
+            //selected commentary
+            var speechTxt = utils.addAudio("", selectedCommentary.audio, selectedCommentary.altText);
+            speechTxt = utils.addAudio(speechTxt, lodash.sample(commentary.next.prompt), commentary.next.altText);
+            speechTxt = utils.addSpeak(speechTxt);
+
+            return conv.ask(new SimpleResponse({
+                speech: speechTxt,
+                text: "",
+            }));
+        } else {
+            console.log('in else from commentary, going to enter help');
+            this.getHelpIntent(conv);
         }
-
-        //store the object in session
-        conv.data.commentaryObj = commentaryObj;
-        console.log('selected one object : ' + JSON.stringify(selectedCommentary));
-
-        //selected commentary
-        var speechTxt = utils.addAudio("", selectedCommentary.audio, selectedCommentary.altText);
-        speechTxt = utils.addAudio(speechTxt, lodash.sample(commentary.next.prompt), commentary.next.altText);
-        speechTxt = utils.addSpeak(speechTxt);
-
-        return conv.ask(new SimpleResponse({
-            speech: speechTxt,
-            text: "",
-        }));
+        
     }, 
 
     getHelpIntent(conv) {

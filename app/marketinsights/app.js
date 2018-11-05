@@ -7,18 +7,18 @@ const {
 
 const dialogflow = require('actions-on-google').dialogflow;
 
-const Contexts = {
-    NOTES: 'notes',
-    COMMENTARY: 'commentary'
-};
+// const Contexts = {
+//     NOTES: 'notes',
+//     COMMENTARY: 'commentary'
+// };
 
-const contextParameters = {
-    commentary: 'commentary',
-};
+// const contextParameters = {
+//     commentary: 'commentary',
+// };
 
-const contextParametersNotes = {
-    notes: 'notes',
-};
+// const contextParametersNotes = {
+//     notes: 'notes',
+// };
 
 const lodash = require('lodash');
 const welcome = require("./responses/welcome");
@@ -33,7 +33,7 @@ const utils = require("./util");
 const helper = require("./helper");
 // Instantiate the Dialogflow client.
 const app = dialogflow();
-
+const db = require('../model');
 // Handle the Dialogflow intent named 'favorite color'.
 // The intent collects a parameter named 'color'.
 
@@ -45,32 +45,113 @@ const response = [];
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");
 
-    let USER_TYPE = '';
-    conv.user.storage.convstate = '';
+    console.log('--------------------conv-----------------------');
+    console.log(JSON.stringify(conv));
+    console.log('--------------------conv-----------------------');
 
-    if(conv.user.storage.visit)   {
-        console.log("in if");
-        USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-			? 'newUser'
-			: 'returningUser'
-        ;
-    } else {
-        console.log("in else");
-        USER_TYPE = 'newUser';
-    }
+    var USER_TYPE = 'newUser';
+    var visitVal =0;
+    var userIdVal = conv.request.user.userId;
 
-    console.log(USER_TYPE);
+    console.log('USER_ID : ' + userIdVal);
 
-    if(conv.user.storage.visit) {
-        var countVisit = conv.user.storage.visit;
-        countVisit = parseInt(countVisit, 10);
-        countVisit++;
-        conv.user.storage.visit = countVisit;
-    } else {
-        conv.user.storage.visit = 1;
-    }
+    console.log('before user : ' + USER_TYPE);
+
+    // var promiseObj = new Promise(function(resolve, reject) {
+        db.user.findOne({
+        where: {
+            user_id: userIdVal
+        }})
+        .then(person => {
+            console.log('from then user ::::::')
+            console.log(JSON.stringify(person)) 
+
+            if(person) { 
+                // update
+                console.log('update');
+                // return obj.update(values);
+                visitVal = person.visit + 1;
+                db.user.update(
+                    {visit: visitVal},
+                    { returning: true, where: {user_id: userIdVal }}
+                )
+                .then(function(rowsUpdated) {
+                    console.log('updated visit');
+                    console.log(rowsUpdated);
+                    // resolve();
+
+                }).catch(err => {
+                    console.log('error in updating user visit');
+                    // reject();
+                })
+            } else { // insert
+                console.log('insert');
+                visitVal = 0
+                db.user.create({
+                    user_id: userIdVal,
+                    visit:1
+                }).then(output => {
+                    console.log("user record inserted request");
+                    // resolve();
+                }).catch(err => {
+                    console.log('Error in storing the user id record');
+                    console.log(err);
+                    // reject()
+                }) ;
+            }
+
+            // resolve();
+        }).catch(err => {
+        console.log('Error in checking user id');
+        console.log(err);
+        // reject();
+        });
+
+    // });
     helper.card(conv, welcome[USER_TYPE]);
+    // console.log('after user : ' + USER_TYPE);
+    // promiseObj.then(function() {
+    //     console.log('in promise then');
+    //     helper.card(conv, welcome[USER_TYPE]);
+        
+    //   })
+    //   .catch(function(err) {
+    //     console.log('in promise catch');
+    //     console.log(err);
+    //     helper.card(conv, welcome[USER_TYPE]);
+    //   });
+    
 });
+
+// app.intent('Default Welcome Intent', (conv) => {
+//     console.log("welcome");
+
+//     let USER_TYPE = '';
+//     conv.user.storage.convstate = '';
+
+//     if(conv.user.storage.visit)   {
+//         console.log("in if");
+//         USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
+// 			? 'newUser'
+// 			: 'returningUser'
+//         ;
+//     } else {
+//         console.log("in else");
+//         USER_TYPE = 'newUser';
+//     }
+
+//     console.log(USER_TYPE);
+
+//     if(conv.user.storage.visit) {
+//         var countVisit = conv.user.storage.visit;
+//         countVisit = parseInt(countVisit, 10);
+//         countVisit++;
+//         conv.user.storage.visit = countVisit;
+//     } else {
+//         conv.user.storage.visit = 1;
+//     }
+//     helper.card(conv, welcome[USER_TYPE]);
+// });
 
 app.intent('DisclosuresIntent', (conv) => {
     console.log('in DisclosuresIntent');

@@ -135,4 +135,3 @@ expressApp.listen(port, function () {
     console.log('*******************************');
   
   });
-// console.log("Server started and running on port!!! 80");
