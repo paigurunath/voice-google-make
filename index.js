@@ -43,23 +43,23 @@ marketInsights.middleware((conv) => {
       }) ;
 });
 
-expressApp.use((request,response, next)=>{
-    console.log('--------------------------------------------------request------------------------------');
-    console.log(JSON.stringify(request.body));
-    console.log('--------------------------------------------------request------------------------------');
+// expressApp.use((request,response, next)=>{
+//     console.log('--------------------------------------------------request------------------------------');
+//     console.log(JSON.stringify(request.body));
+//     console.log('--------------------------------------------------request------------------------------');
     
-    db.voicedata.create({
-        logdata: JSON.stringify(request.body)
-      }).then(output => {
-          console.log("log inserted request");
-      }).catch(err => {
-          console.log('Error in storing the request log record');
-          console.log(err);
-      }) ;
+//     db.voicedata.create({
+//         logdata: JSON.stringify(request.body)
+//       }).then(output => {
+//           console.log("log inserted request");
+//       }).catch(err => {
+//           console.log('Error in storing the request log record');
+//           console.log(err);
+//       }) ;
 
-    next();
+//     next();
    
-});
+// });
 
 expressApp.use(logResponseBody);
 
