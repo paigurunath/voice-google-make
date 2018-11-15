@@ -26,124 +26,124 @@ const CARD = disclosures.card;
 
 const response = [];
 
-//welcomeuser intent implementation from welcome.js
-app.intent('Default Welcome Intent', (conv) => {
-    console.log("welcome" + conv.intent);
-
-    conv.data.currentIntent = conv.intent;
-    conv.data.previousIntent = conv.intent;
-
-    console.log('--------------------conv-----------------------');
-    console.log(JSON.stringify(conv));
-    console.log('--------------------conv-----------------------');
-
-    var USER_TYPE = 'newUser';
-    var visitVal =0;
-    var userIdVal = conv.request.user.userId;
-
-    console.log('USER_ID : ' + userIdVal);
-
-    console.log('before user : ' + USER_TYPE);
-
-    var promiseObj = new Promise(function(resolve, reject) {
-        db.user.findOne({
-        where: {
-            user_id: userIdVal
-        }})
-        .then(person => {
-            console.log('from then user ::::::')
-            console.log(JSON.stringify(person)) 
-
-            if(person) { 
-                // update
-                console.log('update visit top');
-                // return obj.update(values);
-                visitVal = person.visit + 1;
-                db.user.update(
-                    {visit: visitVal},
-                    { returning: true, where: {user_id: userIdVal }}
-                )
-                .then(function(rowsUpdated) {
-                    console.log('updated visit');
-                    console.log(rowsUpdated);
-                    resolve();
-
-                }).catch(err => {
-                    console.log('error in updating user visit');
-                    reject();
-                })
-            } else { // insert
-                console.log('insert');
-                visitVal = 0
-                db.user.create({
-                    user_id: userIdVal,
-                    visit:1
-                }).then(output => {
-                    console.log("user record inserted request");
-                    resolve();
-                }).catch(err => {
-                    console.log('Error in storing the user id record');
-                    console.log(err);
-                    reject()
-                }) ;
-            }
-
-            // resolve();
-        }).catch(err => {
-            console.log('Error in checking user id');
-            console.log(err);
-            reject();
-        });
-
-    });
-    // helper.card(conv, welcome[USER_TYPE]);
-    console.log('after user : ' + USER_TYPE);
-    return promiseObj.then(function() {
-        console.log('in promise then');
-
-        USER_TYPE = visitVal < 2 ? 'newUser' : 'returningUser'
-        console.log(visitVal + ' visit count final ' + USER_TYPE + ' is the final ');
-
-        helper.card(conv, welcome[USER_TYPE]);
-        
-      })
-      .catch(function(err) {
-        console.log('in promise catch');
-        console.log(err);
-        helper.card(conv, welcome[USER_TYPE]);
-      });
-    
-});
-
+// //welcomeuser intent implementation from welcome.js
 // app.intent('Default Welcome Intent', (conv) => {
-//     console.log("welcome");
+//     console.log("welcome" + conv.intent);
 
-//     let USER_TYPE = '';
-//     conv.user.storage.convstate = '';
+//     conv.data.currentIntent = conv.intent;
+//     conv.data.previousIntent = conv.intent;
 
-//     if(conv.user.storage.visit)   {
-//         console.log("in if");
-//         USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-// 			? 'newUser'
-// 			: 'returningUser'
-//         ;
-//     } else {
-//         console.log("in else");
-//         USER_TYPE = 'newUser';
-//     }
+//     console.log('--------------------conv-----------------------');
+//     console.log(JSON.stringify(conv));
+//     console.log('--------------------conv-----------------------');
 
-//     console.log(USER_TYPE);
+//     var USER_TYPE = 'newUser';
+//     var visitVal =0;
+//     var userIdVal = conv.request.user.userId;
 
-//     if(conv.user.storage.visit) {
-//         var countVisit = conv.user.storage.visit;
-//         countVisit = parseInt(countVisit, 10);
-//         countVisit++;
-//         conv.user.storage.visit = countVisit;
-//     } else {
-//         conv.user.storage.visit = 1;
-//     }
-//     helper.card(conv, welcome[USER_TYPE]);
+//     console.log('USER_ID : ' + userIdVal);
+
+//     console.log('before user : ' + USER_TYPE);
+
+//     var promiseObj = new Promise(function(resolve, reject) {
+//         db.user.findOne({
+//         where: {
+//             user_id: userIdVal
+//         }})
+//         .then(person => {
+//             console.log('from then user ::::::')
+//             console.log(JSON.stringify(person)) 
+
+//             if(person) { 
+//                 // update
+//                 console.log('update visit top');
+//                 // return obj.update(values);
+//                 visitVal = person.visit + 1;
+//                 db.user.update(
+//                     {visit: visitVal},
+//                     { returning: true, where: {user_id: userIdVal }}
+//                 )
+//                 .then(function(rowsUpdated) {
+//                     console.log('updated visit');
+//                     console.log(rowsUpdated);
+//                     resolve();
+
+//                 }).catch(err => {
+//                     console.log('error in updating user visit');
+//                     reject();
+//                 })
+//             } else { // insert
+//                 console.log('insert');
+//                 visitVal = 0
+//                 db.user.create({
+//                     user_id: userIdVal,
+//                     visit:1
+//                 }).then(output => {
+//                     console.log("user record inserted request");
+//                     resolve();
+//                 }).catch(err => {
+//                     console.log('Error in storing the user id record');
+//                     console.log(err);
+//                     reject()
+//                 }) ;
+//             }
+
+//             // resolve();
+//         }).catch(err => {
+//             console.log('Error in checking user id');
+//             console.log(err);
+//             reject();
+//         });
+
+//     });
+//     // helper.card(conv, welcome[USER_TYPE]);
+//     console.log('after user : ' + USER_TYPE);
+//     return promiseObj.then(function() {
+//         console.log('in promise then');
+
+//         USER_TYPE = visitVal < 2 ? 'newUser' : 'returningUser'
+//         console.log(visitVal + ' visit count final ' + USER_TYPE + ' is the final ');
+
+//         helper.card(conv, welcome[USER_TYPE]);
+        
+//       })
+//       .catch(function(err) {
+//         console.log('in promise catch');
+//         console.log(err);
+//         helper.card(conv, welcome[USER_TYPE]);
+//       });
+    
 // });
+
+app.intent('Default Welcome Intent', (conv) => {
+    console.log("welcome");
+
+    let USER_TYPE = '';
+    conv.user.storage.convstate = '';
+
+    if(conv.user.storage.visit)   {
+        console.log("in if");
+        USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
+			? 'newUser'
+			: 'returningUser'
+        ;
+    } else {
+        console.log("in else");
+        USER_TYPE = 'newUser';
+    }
+
+    console.log(USER_TYPE);
+
+    if(conv.user.storage.visit) {
+        var countVisit = conv.user.storage.visit;
+        countVisit = parseInt(countVisit, 10);
+        countVisit++;
+        conv.user.storage.visit = countVisit;
+    } else {
+        conv.user.storage.visit = 1;
+    }
+    helper.card(conv, welcome[USER_TYPE]);
+});
 
 app.intent('DisclosuresIntent', (conv) => {
     console.log('in DisclosuresIntent');
