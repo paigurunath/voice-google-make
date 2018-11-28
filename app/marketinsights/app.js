@@ -18,7 +18,7 @@ const utils = require("./util");
 const helper = require("./helper");
 // Instantiate the Dialogflow client.
 const app = dialogflow();
-const db = require('../model');
+// const db = require('../model');
 // Handle the Dialogflow intent named 'favorite color'.
 // The intent collects a parameter named 'color'.
 
@@ -401,6 +401,12 @@ app.intent('ResumeIntent', (conv) => {
 
 // app.intent('Default Fallback Intent', (conv) => {
 app.fallback((conv) => {
+    console.log("going to fallback...")
+
+    console.log('-----------------fallback ------------------------');
+    console.log(JSON.stringify(conv));
+    console.log('-----------------fallback ------------------------');
+
     helper.getFallbackIntent(conv);  
 });
 

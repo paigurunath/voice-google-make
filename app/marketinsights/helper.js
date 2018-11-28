@@ -209,12 +209,12 @@ module.exports = {
         conv.data.currentIntent = conv.intent;
         console.log('in Default Fallback Intent intent');
 
-        if(conv.user.storage.convstate.toString().trim() == 'notes') {
+        if(conv.user.storage.convstate && conv.user.storage.convstate.toString().trim() == 'notes') {
 
             conv.user.storage.generalError = 0;
             this.getHelpIntent(conv);
             
-        } else if(conv.user.storage.convstate.toString().trim() == 'commentary') {
+        } else if(conv.user.storage.convstate && conv.user.storage.convstate.toString().trim() == 'commentary') {
 
             const commentaryError = conv.user.storage.commentaryError || 0;
             conv.user.storage.commentaryError = (parseInt(commentaryError, 10) <= 0) ? 1 : parseInt(commentaryError, 10) + 1;

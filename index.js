@@ -14,7 +14,9 @@ const expressApp = express().use(bodyParser.json())
 // expressApp.use((request,next,cb)=>{
 
 marketInsights.middleware((conv) => {
+    console.log('------------------------------middleware--------------------------------');
     console.log(JSON.stringify(conv));
+    console.log('------------------------------middleware--------------------------------');
 });
 
 // expressApp.use((request,response, next)=>{
