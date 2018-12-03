@@ -6,118 +6,19 @@ const SimpleResponse = require('actions-on-google').SimpleResponse;
 const dialogflow = require('actions-on-google').dialogflow;
 
 const lodash = require('lodash');
-const welcome = require("./responses/welcome");
-const disclosures = require("./responses/disclosures");
-const notes = require("./responses/notes");
-const commentary =  require("./responses/commentary");
-const { general, aboutDr, quote, whatIsThis } = require("./responses/easterEggs");
-const { unhandled, goodbye, help } = require("./responses/exceptions");
-const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
+const audioPlayer = require("../responses/audioPlayer");
+const errors = require("../responses/errors");
+const library = require("../responses/library");
+const main = require("../responses/main");
+const notifications = require("../responses/notifications");
 
-const utils = require("./util");
-const helper = require("./helper");
 // Instantiate the Dialogflow client.
 const app = dialogflow();
-var Speech = require('ssml-builder');
-// const db = require('../model');
-// Handle the Dialogflow intent named 'favorite color'.
-// The intent collects a parameter named 'color'.
-const CARD = disclosures.card;
-
-const response = [];
-
-// //welcomeuser intent implementation from welcome.js
-// app.intent('Default Welcome Intent', (conv) => {
-//     console.log("welcome" + conv.intent);
-
-//     conv.data.currentIntent = conv.intent;
-//     conv.data.previousIntent = conv.intent;
-
-//     console.log('--------------------conv-----------------------');
-//     console.log(JSON.stringify(conv));
-//     console.log('--------------------conv-----------------------');
-
-//     var USER_TYPE = 'newUser';
-//     var visitVal =0;
-//     var userIdVal = conv.request.user.userId;
-
-//     console.log('USER_ID : ' + userIdVal);
-
-//     console.log('before user : ' + USER_TYPE);
-
-//     var promiseObj = new Promise(function(resolve, reject) {
-//         db.user.findOne({
-//         where: {
-//             user_id: userIdVal
-//         }})
-//         .then(person => {
-//             console.log('from then user ::::::')
-//             console.log(JSON.stringify(person)) 
-
-//             if(person) { 
-//                 // update
-//                 console.log('update visit top');
-//                 // return obj.update(values);
-//                 visitVal = person.visit + 1;
-//                 db.user.update(
-//                     {visit: visitVal},
-//                     { returning: true, where: {user_id: userIdVal }}
-//                 )
-//                 .then(function(rowsUpdated) {
-//                     console.log('updated visit');
-//                     console.log(rowsUpdated);
-//                     resolve();
-
-//                 }).catch(err => {
-//                     console.log('error in updating user visit');
-//                     reject();
-//                 })
-//             } else { // insert
-//                 console.log('insert');
-//                 visitVal = 0
-//                 db.user.create({
-//                     user_id: userIdVal,
-//                     visit:1
-//                 }).then(output => {
-//                     console.log("user record inserted request");
-//                     resolve();
-//                 }).catch(err => {
-//                     console.log('Error in storing the user id record');
-//                     console.log(err);
-//                     reject()
-//                 }) ;
-//             }
-
-//             // resolve();
-//         }).catch(err => {
-//             console.log('Error in checking user id');
-//             console.log(err);
-//             reject();
-//         });
-
-//     });
-//     // helper.card(conv, welcome[USER_TYPE]);
-//     console.log('after user : ' + USER_TYPE);
-//     return promiseObj.then(function() {
-//         console.log('in promise then');
-
-//         USER_TYPE = visitVal < 2 ? 'newUser' : 'returningUser'
-//         console.log(visitVal + ' visit count final ' + USER_TYPE + ' is the final ');
-
-//         helper.card(conv, welcome[USER_TYPE]);
-        
-//       })
-//       .catch(function(err) {
-//         console.log('in promise catch');
-//         console.log(err);
-//         helper.card(conv, welcome[USER_TYPE]);
-//       });
-    
-// });
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");
 
+    conv.noInputs
     let USER_TYPE = '';
     conv.user.storage.convstate = '';
 
@@ -174,31 +75,8 @@ app.intent('NotesOnTheWeekAheadIntent', (conv) => {
     speechTxt = utils.addAudio(speechTxt, notes.preview.reprompt, notes.intro.altText);
     speechTxt = utils.addSpeak(speechTxt);
 
-    var speech = new Speech();
-    speech.audio(notes.preview.prompt)
-    //make it ssml
-    var speechOutput = speech.ssml(true);
-
-    //reprompts
-    var repromptSpeech = new Speech();
-    repromptSpeech.audio(notes.preview.reprompt)
-    //make it ssml
-    var repromptSpeechOutput = repromptSpeech.ssml(true);
-
-
-    //static reprompts 
-    conv.noInputs = [
-        'Are you still there?',
-        'Hello?',
-        new SimpleResponse({
-            text: 'Talk to you later. Bye!',
-            speech: '<speak>Talk to you later. Bye!</speak>'
-        })
-    ]
-
-    
     //SPEECH
-    return conv.ask(new SimpleResponse({
+    conv.ask(new SimpleResponse({
         speech: speechTxt,
         text: "",
     }));
