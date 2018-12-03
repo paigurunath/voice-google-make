@@ -4,6 +4,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 var marketInsights = require('./app/marketinsights/app');
+var myNextMove = require('./app/mynextmove/handlers/app');
 
 var NODE_ENV = process.env.NODE_ENV || 'development';
 var port = process.env.VCAP_APP_PORT || 3000;
@@ -40,6 +41,37 @@ marketInsights.middleware((conv) => {
 expressApp.use(logResponseBody);
 
 expressApp.post('/voice/google/marketinsights', marketInsights)
+ 
+
+function logResponseBody(req, res, next) {
+    console.log('--------------------------response--------------------------------');
+    console.log(res.end)
+    console.log('--------------------------response--------------------------------');
+  var oldWrite = res.write,
+      oldEnd = res.end;
+
+  var chunks = [];
+
+  res.write = function (chunk) {
+    chunks.push(chunk);
+
+    oldWrite.apply(res, arguments);
+  };
+
+  res.end = function (chunk) {
+    if (chunk)
+      chunks.push(chunk);
+
+    var body = Buffer.concat(chunks).toString('utf8');
+    console.log(req.path, body);
+    console.log(body)
+    oldEnd.apply(res, arguments);
+  };
+
+  next();
+}
+
+expressApp.post('/voice/google/mynextmove', myNextMove)
  
 
 function logResponseBody(req, res, next) {
