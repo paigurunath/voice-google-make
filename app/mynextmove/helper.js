@@ -14,6 +14,10 @@ const library = require("./responses/library");
 const main = require("./responses/main");
 const notifications = require("./responses/notifications");
 
+const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/My-Next-Move';
+const AudioFeed = require('./libs/audio-feed-api');
+const audioFeed = new AudioFeed(feedUrl);
+
 var Speech = require('ssml-builder');
 const lodash = require('lodash');
 
@@ -126,8 +130,62 @@ module.exports = {
 
     yesIntent(conv) {
         console.log('yes intent');
+        this.latestIntent(conv);
+    },
+
+    async latestIntent(conv) {
+
+        console.log('in latest from yes');
+        const feed = await audioFeed.getJSONFeed(feedUrl);
+        const latest = feed.getLatest();
+
+        console.log('latest ===>', latest);
+
+        // const speech = this.speechBuilder()
+        //     .addAudio(yes.prompt, "$");
+
+        // let audioData = {
+        //     audio: latest.audioURL,
+        //     speech: speech,
+        //     title: "My Next Move",
+        //     subTitle: "Michael's Thoughts",
+        //     text: latest.title
+        // }
+
+        // this.toIntent('PlayAudio', audioData);
         
-        //latest intent
+        this.playAudio(conv, latest)
+    },
+
+    playAudio(conv, episode) {
+
+        console.log("in play audio");
+      
+        return new Promise(function() {
+            var speech = new Speech();
+            speech.audio(lodash.sample(audioPlayer.yes.prompt))
+            //make it ssml
+            var speechOutput = speech.ssml();
+            
+            conv.ask(new SimpleResponse({
+                speech: speechOutput,
+                text: '',
+            }));
+    
+            conv.ask(new MediaObject({
+                name: episode.title,
+                url: episode.audioURL,
+                description: episode.description,
+                icon: new Image({
+                    url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
+                    alt: 'Media icon',
+                }),
+            }));
+    
+            console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
+            conv.ask(new Suggestions("Episode"));
+        })
+       
     },
 
     introIntent(conv) {
@@ -170,7 +228,8 @@ module.exports = {
         }
 
     }, 
-    playAudio(conv, episode) {
+    
+    playAudio2(conv, episode) {
 
         console.log("in play audio");
       

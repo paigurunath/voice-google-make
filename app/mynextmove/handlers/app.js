@@ -48,6 +48,13 @@ app.intent('Default Welcome Intent', (conv) => {
     helper.newWelcomeIntent(conv);
 });
 
+app.intent('YesIntent', (conv) => {
+    console.log("in YesIntent");
+    new Promise(function(resolve, reject) {
+        helper.yesIntent(conv);
+    });
+});
+
 
 // app.intent('Default Fallback Intent', (conv) => {
 app.fallback((conv) => {

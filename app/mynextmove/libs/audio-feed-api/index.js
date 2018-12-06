@@ -8,11 +8,13 @@ class AudioFeed {
     }
 
     getJSONFeed(apiURI, refresh) {
+
         if(this.feed || refresh) {
             return Promise.resolve(this);
         }
 
-        console.log(apiURI);
+        // console.log('from getJSONFeed method');
+        // console.log(apiURI);
 
         return request({
             uri: apiURI,
@@ -38,6 +40,9 @@ class AudioFeed {
 
     getLatest() {
         if(!this.feed) { throw new Error('No feed data available') };
+
+        // console.log("in latest feed fetching");
+        // console.log(JSON.stringify(this.feed));
 
         return this.feed.sort((a, b) => {
             const dateOne = new moment(a.pub_date);
