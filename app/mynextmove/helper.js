@@ -41,7 +41,7 @@ module.exports = {
         var speech = new Speech();
         speech.audio(lodash.sample(main.welcome.new))
         //make it ssml
-        var speechOutput = speech.ssml(true);
+        var speechOutput = speech.ssml();
 
         // //reprompts
         // var repromptSpeech = new Speech();
@@ -73,7 +73,7 @@ module.exports = {
 
         return conv.ask(new SimpleResponse({
             speech: speechOutput,
-            text: "",
+            text: "Welcome",
         }));
     },
 

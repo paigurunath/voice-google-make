@@ -1,6 +1,6 @@
 module.exports = {
     intro: {
-        prompt: "${audioURL}/4.0.library.yes.1.mp3"
+        prompt: "https://am.jpmorgan.com/blob-gim/1383563676037/83456/4.0.library.yes.1.mp3"
     },
     episodes: {
         prompt: "<p>Coming right up. We have</p>",
@@ -13,18 +13,18 @@ module.exports = {
         repromptMore: "<p>You can also say more or library to go back to the main menu. What will it be?</p>"
     },
     description: {
-        prompt: "${audioURL}/4.0.library.desc.1.mp3"
+        prompt: "https://am.jpmorgan.com/blob-gim/1383563676037/83456/4.0.library.desc.1.mp3"
     },
     unhandled: {
         prompt: [
-            "${audioURL}/5.0-no.content.prompt.1.mp3",
-            "${audioURL}/5.0-no.content.prompt.2.mp3"
+            "https://am.jpmorgan.com/blob-gim/1383563677373/83456/5.0-no.content.prompt.1.mp3",
+            "https://am.jpmorgan.com/blob-gim/1383563677540/83456/5.0-no.content.prompt.2.mp3"
         ]
     },
     nocontent: {
         prompt: [
-            "${audioURL}/5.0-no.content.1.mp3",
-            "${audioURL}/5.0-no.content.2.mp3"
+            "https://am.jpmorgan.com/blob-gim/1383563677039/83456/5.0-no.content.1.mp3",
+            "https://am.jpmorgan.com/blob-gim/1383563677206/83456/5.0-no.content.2.mp3"
         ]
     }
 }
