@@ -50,9 +50,9 @@ app.intent('Default Welcome Intent', (conv) => {
 
 app.intent('YesIntent', (conv) => {
     console.log("in YesIntent");
-    new Promise(function(resolve, reject) {
-        helper.yesIntent(conv);
-    });
+    // new Promise(function(resolve, reject) {
+        return helper.latestIntent(conv);
+    // });
 });
 
 

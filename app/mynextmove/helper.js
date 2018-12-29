@@ -36,7 +36,7 @@ module.exports = {
 
         return conv.close(new SimpleResponse({
             speech: speechOutput,
-            text: '',
+            text: 'Welcome',
         }));
     },
 
@@ -130,13 +130,15 @@ module.exports = {
 
     yesIntent(conv) {
         console.log('yes intent');
-        this.latestIntent(conv);
+        return this.latestIntent(conv);
     },
 
     async latestIntent(conv) {
 
+        // async
         console.log('in latest from yes');
-        const feed = await audioFeed.getJSONFeed(feedUrl);
+        // await
+        const feed =  await audioFeed.getJSONFeed(feedUrl);
         const latest = feed.getLatest();
 
         console.log('latest ===>', latest);
@@ -154,7 +156,43 @@ module.exports = {
 
         // this.toIntent('PlayAudio', audioData);
         
-        this.playAudio(conv, latest)
+        // this.playAudio(conv, latest)
+
+        // return new Promise(function( resolve, reject) {
+
+            
+
+             
+            var speech = new Speech();
+            speech.audio(lodash.sample(audioPlayer.yes.prompt))
+            //make it ssml
+            var speechOutput = speech.ssml();
+            
+            // if (err) {
+            //     console.log(err)
+            //     reject( err );
+            //   } else {
+
+                    conv.ask(new SimpleResponse({
+                        speech: speechOutput,
+                        text: 'latest',
+                    }));
+            
+                    conv.ask(new MediaObject({
+                        name: latest.title,
+                        url: latest.audioURL,
+                        description: latest.description,
+                        icon: new Image({
+                            url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
+                            alt: 'Media icon',
+                        }),
+                    }));
+            
+                    console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
+                    return conv.ask(new Suggestions("Episode"));
+            // };
+            // resolve();
+        // })
     },
 
     playAudio(conv, episode) {

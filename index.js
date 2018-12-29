@@ -75,9 +75,9 @@ expressApp.post('/voice/google/mynextmove', myNextMove)
  
 
 function logResponseBody(req, res, next) {
-    console.log('--------------------------response--------------------------------');
-    console.log(res.end)
-    console.log('--------------------------response--------------------------------');
+    // console.log('--------------------------response--------------------------------');
+    // console.log(res.end)
+    // console.log('--------------------------response--------------------------------');
   var oldWrite = res.write,
       oldEnd = res.end;
 
@@ -94,8 +94,8 @@ function logResponseBody(req, res, next) {
       chunks.push(chunk);
 
     var body = Buffer.concat(chunks).toString('utf8');
-    console.log(req.path, body);
-    console.log(body)
+    // console.log(req.path, body);
+    // console.log(body)
     oldEnd.apply(res, arguments);
   };
 
