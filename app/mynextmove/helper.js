@@ -394,6 +394,9 @@ module.exports = {
     moreIntent(conv) {
         console.log('more intent');
 
+        // get the titles from the session
+        // const titles = this.getSessionAttribute('titles');
+
         //get titles from session
         const titles = ''
 
@@ -402,7 +405,7 @@ module.exports = {
             var speech = new Speech();
             speech.audio(lodash.sample(library.nocontent.prompt))
             //make it ssml
-            var speechOutput = speech.ssml(true);
+            var speechOutput = speech.ssml();
 
             //reprompts
             var repromptSpeech = new Speech();
@@ -410,23 +413,27 @@ module.exports = {
             //make it ssml
             var repromptSpeechOutput = repromptSpeech.ssml(true);
 
-            //static reprompts 
-            conv.noInputs = [
-                new SimpleResponse({
-                    text: repromptSpeechOutput,
-                    speech: ''
-                }),
-            
-                new SimpleResponse({
-                    text: speechOutput,
-                    speech: ''
-                })
-            ]
-
             return conv.ask(new SimpleResponse({
                 speech: speechOutput,
-                text: "",
+                text: "More",
             }));
+            // //static reprompts 
+            // conv.noInputs = [
+            //     new SimpleResponse({
+            //         text: repromptSpeechOutput,
+            //         speech: ''
+            //     }),
+            
+            //     new SimpleResponse({
+            //         text: speechOutput,
+            //         speech: ''
+            //     })
+            // ]
+
+            // return conv.ask(new SimpleResponse({
+            //     speech: speechOutput,
+            //     text: "",
+            // }));
 
         } else {
 
