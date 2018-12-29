@@ -13,6 +13,7 @@ const errors = require("./responses/errors");
 const library = require("./responses/library");
 const main = require("./responses/main");
 const notifications = require("./responses/notifications");
+const createOxfordCommaList = require('./libs/utils').createOxfordCommaList;
 
 const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/My-Next-Move';
 const AudioFeed = require('./libs/audio-feed-api');
@@ -143,56 +144,29 @@ module.exports = {
 
         console.log('latest ===>', latest);
 
-        // const speech = this.speechBuilder()
-        //     .addAudio(yes.prompt, "$");
-
-        // let audioData = {
-        //     audio: latest.audioURL,
-        //     speech: speech,
-        //     title: "My Next Move",
-        //     subTitle: "Michael's Thoughts",
-        //     text: latest.title
-        // }
-
-        // this.toIntent('PlayAudio', audioData);
+        var speech = new Speech();
+        speech.audio(lodash.sample(audioPlayer.yes.prompt))
+        //make it ssml
+        var speechOutput = speech.ssml();
         
-        // this.playAudio(conv, latest)
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: 'latest',
+        }));
 
-        // return new Promise(function( resolve, reject) {
+        conv.ask(new MediaObject({
+            name: latest.title,
+            url: latest.audioURL,
+            description: latest.description,
+            icon: new Image({
+                url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
+                alt: 'Media icon',
+            }),
+        }));
 
-            
-
-             
-            var speech = new Speech();
-            speech.audio(lodash.sample(audioPlayer.yes.prompt))
-            //make it ssml
-            var speechOutput = speech.ssml();
-            
-            // if (err) {
-            //     console.log(err)
-            //     reject( err );
-            //   } else {
-
-                    conv.ask(new SimpleResponse({
-                        speech: speechOutput,
-                        text: 'latest',
-                    }));
-            
-                    conv.ask(new MediaObject({
-                        name: latest.title,
-                        url: latest.audioURL,
-                        description: latest.description,
-                        icon: new Image({
-                            url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
-                            alt: 'Media icon',
-                        }),
-                    }));
-            
-                    console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
-                    return conv.ask(new Suggestions("Episode"));
-            // };
-            // resolve();
-        // })
+        console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
+        return conv.ask(new Suggestions("Episode"));
+          
     },
 
     playAudio(conv, episode) {
@@ -252,17 +226,26 @@ module.exports = {
         
         episodeNumber = params.episodeNumber;
         //replace the url and check
-        const feed = await audioFeed.getJSONFeed(process.env.AUDIO_API_URI);
+        const feed = await audioFeed.getJSONFeed(feedUrl);
         const episode = feed.getEpisode(episodeNumber);
 
+        console.log("Episode selected : " + JSON.stringify(episode)); 
         if(episode === '') {
 
             //send to unhandled or fallback
-            this.toIntent('Unhandled');
+            var speech = new Speech();
+            speech.audio(lodash.sample(library.unhandled.prompt));
+            //make it ssml
+            var speechOutput = speech.ssml();
+
+            conv.ask(new SimpleResponse({
+                speech: speechOutput,
+                text: "Fallback",
+            }));
         } else {
 
             // call the mediaresponse object
-            this.playAudio(conv, episode);
+            this.playAudio2(conv, episode);
         }
 
     }, 
@@ -278,7 +261,7 @@ module.exports = {
         
         conv.ask(new SimpleResponse({
             speech: speechOutput,
-            text: '',
+            text: 'episode',
         }));
 
         conv.ask(new MediaObject({
@@ -296,34 +279,41 @@ module.exports = {
 
     subjectOnlyIntent(conv) {
         console.log('subject only intent');
-        this.episodeOnlyIntent(conv);
+        this.subjectIntent(conv);
     },
 
-    async subjectIntent(conv) {
+    async subjectIntent(conv, params) {
         console.log('subject intent');
 
         let subject ='';
         
         subject = params.subject;
        
+        const feed = await audioFeed.getJSONFeed(feedUrl);
+        const subjects = feed.getSubjectList(subject);
+
+        const titles = subjects.map(episode => {
+            return `episode ${episode.episode_num}, ${episode.title}`
+        });
+
         if(subject === '') {
 
             //send to unhandled or fallback
-            this.toIntent('Unhandled');
+            var speech = new Speech();
+            speech.audio(lodash.sample(library.unhandled.prompt));
+            //make it ssml
+            var speechOutput = speech.ssml();
+
+            conv.ask(new SimpleResponse({
+                speech: speechOutput,
+                text: "Fallback",
+            }));
         } else {
-
-            const feed = await audioFeed.getJSONFeed(process.env.AUDIO_API_URI);
-            const subjects = feed.getSubjectList(subject);
-
-            const titles = subjects.map(episode => {
-                return `episode ${episode.episode_num}, ${episode.title}`
-            })
-
             const data =  {
                 titles: titles,
-                prompt: episodes.prompt,
-                reprompt: episodes.reprompt,
-                repromptMore: episodes.repromptMore
+                prompt: library.episodes.prompt,
+                reprompt: library.episodes.reprompt,
+                repromptMore: library.episodes.repromptMore
             }
 
             this.promptEpisodes(conv, data);
@@ -331,49 +321,40 @@ module.exports = {
     },
 
     promptEpisodes(conv, data) {
-        console.log('PromptEpisodes');
+        console.log('in PromptEpisodes');
         const titles = data.titles;
         const subSet = titles.splice(0, 3);
 
         // this.setSessionAttributes({titles: titles});
 
-        // const list = createOxfordCommaList(subSet);
+        const list = createOxfordCommaList(subSet);
+        console.log('list : ' + JSON.stringify(list));
+        // console.log('data.prompt : ' + JSON.stringify(data.prompt));
+        //add speech
         var speech = new Speech();
-        speech.audio(data.prompt)
-        //make it ssml
-        var speechOutput = speech.ssml(true);
-
-        //reprompts
+        speech.paragraph(data.prompt)
+        speech.paragraph(list)
+        speech.paragraph(data.reprompt)
+        speech.paragraph(data.repromptMore)
+        //add reprompt
         var repromptSpeech = new Speech();
-        repromptSpeech.audio(data.reprompt)
-        //make it ssml
-        var repromptSpeechOutput = repromptSpeech.ssml(true);
+        repromptSpeech.paragraph(data.reprompt);
+        repromptSpeech.paragraph(data.repromptMore);
+        // console.log('titles.length', titles.length);
+        // console.log('data : ' + JSON.stringify(data));
 
-        //reprompts
-        var repromptSpeech1 = new Speech();
-        repromptSpeech1.audio(data.repromptMore)
-        //make it ssml
-        var repromptSpeechOutput1 = repromptSpeech1.ssml(true);
-
-        //static reprompts 
-        conv.noInputs = [
-            new SimpleResponse({
-                text: repromptSpeechOutput,
-                speech: '<speak>Talk to you later. Bye!</speak>'
-            }),
-            new SimpleResponse({
-                text: repromptSpeechOutput1,
-                speech: '<speak>Talk to you later. Bye!</speak>'
-            }),
-            new SimpleResponse({
-                text: 'Talk to you later. Bye!',
-                speech: '<speak>Talk to you later. Bye!</speak>'
-            })
-        ]
-
+        var speechOutput = speech.ssml();
+        var repromptSpeechOutput = repromptSpeech.ssml();
+        // var speechOutput = speech.toObject();
+        console.log('********************************************');
+        console.log(speechOutput);
+        console.log('********************************************');
+        // console.log(repromptSpeechOutput);
+        console.log('********************************************');
+       
         return conv.ask(new SimpleResponse({
             speech: speechOutput,
-            text: "",
+            text: "Subject",
         }));
     },
 
