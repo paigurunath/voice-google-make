@@ -6,8 +6,11 @@ const easterEggs = require('../responses/easterEggs');
 const exceptions = require('../responses/exceptions');
 const welcome = require('../responses/welcome');
 const SimpleResponse = require('actions-on-google').SimpleResponse;
-
+const MediaObject = require('actions-on-google').MediaObject;
+const Image = require('actions-on-google').Image;
+const Suggestions = require('actions-on-google').Suggestions;
 const dialogflow = require('actions-on-google').dialogflow;
+const helper = require('./helper');
 
 // Instantiate the Dialogflow client.
 const app = dialogflow();
@@ -41,17 +44,7 @@ app.intent('Default Welcome Intent', (conv) => {
         conv.user.storage.visit = 1;
     }
 
-    request('https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/Eye-on-the-Market')
-			.then(body => {
-				const sortedData = JSON.parse(body).sort(function(a,b) {
-					return a.episode_num - b.episode_num;
-				});
-				this.toStateIntent(welcomeState, 'WelcomeUser', sortedData[sortedData.length - 1].audioURL);
-			})
-			.catch(err => {
-				console.log('error with request:', err);
-            })
-            
+    helper.latestIntent(conv); 
 });
 
 app.intent('NewContentIntent', (conv) => {
