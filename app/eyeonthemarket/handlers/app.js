@@ -44,7 +44,7 @@ app.intent('Default Welcome Intent', (conv) => {
         conv.user.storage.visit = 1;
     }
 
-    helper.latestIntent(conv); 
+    return helper.latestIntent(conv); 
 });
 
 app.intent('NewContentIntent', (conv) => {
