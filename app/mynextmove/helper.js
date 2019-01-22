@@ -48,34 +48,6 @@ module.exports = {
         //make it ssml
         var speechOutput = speech.ssml();
 
-        // //reprompts
-        // var repromptSpeech = new Speech();
-        // repromptSpeech.audio(lodash.sample(main.welcome.reprompt))
-        // //make it ssml
-        // var repromptSpeechOutput = repromptSpeech.ssml(true);
-
-        // //reprompts
-        // var repromptSpeech1 = new Speech();
-        // repromptSpeech1.audio(lodash.sample(main.welcome.reprompt))
-        // //make it ssml
-        // var repromptSpeechOutput1 = repromptSpeech1.ssml(true);
-
-        // //static reprompts 
-        // conv.noInputs = [
-        //     new SimpleResponse({
-        //         text: repromptSpeechOutput,
-        //         speech: '<speak>Talk to you later. Bye!</speak>'
-        //     }),
-        //     new SimpleResponse({
-        //         text: repromptSpeechOutput1,
-        //         speech: '<speak>Talk to you later. Bye!</speak>'
-        //     }),
-        //     new SimpleResponse({
-        //         text: 'Talk to you later. Bye!',
-        //         speech: '<speak>Talk to you later. Bye!</speak>'
-        //     })
-        // ]
-
         return conv.ask(new SimpleResponse({
             speech: speechOutput,
             text: "Welcome",

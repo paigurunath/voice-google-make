@@ -118,6 +118,10 @@ const response = [];
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");
 
+    console.log('-------------------------------conv---------------------------------------');
+    console.log(JSON.stringify(conv));
+    console.log('-------------------------------conv---------------------------------------');
+    
     let USER_TYPE = '';
     conv.user.storage.convstate = '';
 

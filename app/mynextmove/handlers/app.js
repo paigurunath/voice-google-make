@@ -14,39 +14,79 @@ const notifications = require("../responses/notifications");
 const helper = require('../helper');
 var Speech = require('ssml-builder');
 
+const request = require("request-promise");
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");
 
-    conv.noInputs
-    let USER_TYPE = '';
-    conv.user.storage.convstate = '';
+    console.log('-------------------------------conv---------------------------------------');
+    console.log(JSON.stringify(conv));
+    console.log('-------------------------------conv---------------------------------------');
+    
+    var dataObj = {};
+    dataObj.userid = conv.user._id;
+    dataObj.skillid = conv.user._id;
 
-    if(conv.user.storage.visit)   {
-        console.log("in if");
-        USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-			? 'newUser'
-			: 'returningUser'
-        ;
-    } else {
-        console.log("in else");
-        USER_TYPE = 'newUser';
-    }
+    var options = {
+      method: 'POST',
+      uri: 'http://localhost:8090/user/getUserVisitCountOnSkill',
+      body: dataObj,
+      json: true // Automatically stringifies the body to JSON
+    };
 
-    console.log(USER_TYPE);
+    var promiseObj = new Promise(function(resolve, reject) {
+        request(options)
+            .then(function (result) {
+                resolve(result);
+            })
+            .catch(function (err) {
+                reject();
+            });
+    });
 
-    if(conv.user.storage.visit) {
-        var countVisit = conv.user.storage.visit;
-        countVisit = parseInt(countVisit, 10);
-        countVisit++;
-        conv.user.storage.visit = countVisit;
-    } else {
-        conv.user.storage.visit = 1;
-    }
-    // helper.card(conv, welcome[USER_TYPE]);
-    helper.newWelcomeIntent(conv);
+    return promiseObj.then(function(result) {
+      console.log('in promise then');
+
+      if(result.visit_count < 2)  {
+        helper.newWelcomeIntent(conv);
+      } else  {
+        helper.welcomeIntent(conv);
+      }
+    })
+    .catch(function(err) {
+      console.log('in promise catch');
+      console.log(err);
+      helper.newWelcomeIntent(conv);
+    });
+    // conv.noInputs
+    // let USER_TYPE = '';
+    // conv.user.storage.convstate = '';
+
+    // if(conv.user.storage.visit)   {
+    //     console.log("in if");
+    //     USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
+	// 		? 'newUser'
+	// 		: 'returningUser'
+    //     ;
+    // } else {
+    //     console.log("in else");
+    //     USER_TYPE = 'newUser';
+    // }
+
+    // console.log(USER_TYPE);
+
+    // if(conv.user.storage.visit) {
+    //     var countVisit = conv.user.storage.visit;
+    //     countVisit = parseInt(countVisit, 10);
+    //     countVisit++;
+    //     conv.user.storage.visit = countVisit;
+    // } else {
+    //     conv.user.storage.visit = 1;
+    // }
+    // // helper.card(conv, welcome[USER_TYPE]);
+    // helper.newWelcomeIntent(conv);
 });
 
 app.intent('YesIntent', (conv) => {
