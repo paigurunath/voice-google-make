@@ -56,59 +56,15 @@ app.intent('Default Welcome Intent', (conv) => {
       console.log(result.visit_count + ' visit count final ' + USER_TYPE + ' is the final ');
 
       helper.card(conv, welcome[USER_TYPE]);
-    //   var speech = new Speech();
-    //   speech.audio(welcome[USER_TYPE].prompt);
-    //   speech.pause('500ms');
-    //   var speechOutput = speech.ssml(true);
-
-    //   return handlerInput.responseBuilder
-    //     .speak(speechOutput)
-    //     .withStandardCard(CARD.title, CARD.body, 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_small.png', 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png')
-    //     .withShouldEndSession(false)
-    //     .getResponse();
+   
     })
     .catch(function(err) {
       console.log('in promise catch');
       console.log(err);
       var USER_TYPE = 'newUser';
       helper.card(conv, welcome[USER_TYPE]);
-    //   var speech = new Speech();
-    //   speech.audio(welcome[USER_TYPE].prompt);
-    //   speech.pause('500ms');
-    //   var speechOutput = speech.ssml(true);
-
-    //   return handlerInput.responseBuilder
-    //     .speak(speechOutput)
-    //     .withStandardCard(CARD.title, CARD.body, 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_small.png', 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png')
-    //     .withShouldEndSession(false)
-    //     .getResponse();
+    
       });
-
-    // let USER_TYPE = '';
-    // conv.user.storage.convstate = '';
-
-    // if(conv.user.storage.visit)   {
-    //     console.log("in if");
-    //     USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-	// 		? 'newUser'
-	// 		: 'returningUser'
-    //     ;
-    // } else {
-    //     console.log("in else");
-    //     USER_TYPE = 'newUser';
-    // }
-
-    // console.log(USER_TYPE);
-
-    // if(conv.user.storage.visit) {
-    //     var countVisit = conv.user.storage.visit;
-    //     countVisit = parseInt(countVisit, 10);
-    //     countVisit++;
-    //     conv.user.storage.visit = countVisit;
-    // } else {
-    //     conv.user.storage.visit = 1;
-    // }
-    // helper.card(conv, welcome[USER_TYPE]);
 });
 
 app.intent('DisclosuresIntent', (conv) => {
@@ -163,6 +119,7 @@ app.intent('NotesOnTheWeekAheadIntent', (conv) => {
     ]
 
     
+    
     //SPEECH
     return conv.ask(new SimpleResponse({
         speech: speechTxt,
@@ -198,6 +155,8 @@ app.intent('CommentaryIntent', (conv, params) => {
 
     console.log('session from commentary');
     console.log(conv.user.storage.convstate);
+
+    console.log("commentary params : " + JSON.stringify(params));
 
     if(params.commentaryNumber === "") {
         //handle without when there is only commentary this is without the commentary number. Initial initiation.
@@ -361,8 +320,10 @@ app.intent('PlayClipForIntent', (conv) => {
 });
 
 app.intent('PauseIntent', (conv) => {
+    console.log('----------------------------pause ------------------------------');
     console.log('in PauseIntent');
-
+    console.log('----------------------------pause ------------------------------');
+    
     conv.data.previousIntent = conv.data.currentIntent;
     conv.data.currentIntent = conv.intent;
 

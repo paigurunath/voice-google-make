@@ -13,7 +13,6 @@ const disclosures = require("./responses/disclosures");
 const commentary =  require("./responses/commentary");
 const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
 const notes = require("./responses/notes");
-const request = require("request-promise");
 
 const utils = require("./util");
 const lodash = require('lodash');
@@ -153,7 +152,7 @@ module.exports = {
 
             //selected commentary
             var speechTxt = utils.addAudio("", selectedCommentary.audio, selectedCommentary.altText);
-            speechTxt = utils.addAudio(speechTxt, lodash.sample(commentary.next.prompt), commentary.next.altText);
+            //speechTxt = utils.addAudio(speechTxt, lodash.sample(commentary.next.prompt), commentary.next.altText);
             speechTxt = utils.addSpeak(speechTxt);
 
             return conv.ask(new SimpleResponse({
@@ -168,8 +167,14 @@ module.exports = {
 
     getHelpIntent(conv) {
 
+        console.log("conv.data.currentIntent : " +  conv.data.currentIntent);
+        console.log("conv.data.previousIntent : " +  conv.data.previousIntent);
+
+
         console.log("from gethelp intent");
-        if(conv.user.storage.convstate.toString().trim() == 'notes') {
+        if(conv.user.storage.convstate && conv.user.storage.convstate.toString().trim() == 'notes') {
+
+            conv.user.storage.convstate = '';
 
             console.log('inside if help');
             // conv.user.storage.generalError = 0;
@@ -181,9 +186,10 @@ module.exports = {
                 speech:speechTxt,
                 text: '',
             }));
-        } else if (conv.user.storage.convstate.toString().trim() == 'commentary') {
+        } else if (conv.user.storage.convstate && conv.user.storage.convstate.toString().trim() == 'commentary') {
             console.log('inside else if  help');
             
+            conv.user.storage.convstate = '';
             //set this to zero
             conv.user.storage.commentaryError = 0;
 
