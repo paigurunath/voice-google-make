@@ -163,7 +163,6 @@ module.exports = {
             console.log('in else from commentary, going to enter help');
             this.getHelpIntent(conv);
         }
-        
     }, 
 
     getHelpIntent(conv) {
