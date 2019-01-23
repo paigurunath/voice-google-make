@@ -14,7 +14,6 @@ const commentary =  require("./responses/commentary");
 const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
 const notes = require("./responses/notes");
 
-const utils = require("./util");
 const lodash = require('lodash');
 var Speech = require('ssml-builder');
 
@@ -46,12 +45,14 @@ module.exports = {
         const CARD = disclosures.card;
         const response = [];
 
-        var speechTxt = utils.addAudio("", txtObj.prompt, txtObj.altText);
-        speechTxt = utils.addSpeak(speechTxt);
-        
+        var speech = new Speech();
+        speech.audio(txtObj.prompt)
+        //make it ssml
+        var speechOutput = speech.ssml();
+
         response.push(new SimpleResponse({
-            speech: speechTxt,
-            text: 'Welcome to Market Insights.',
+            speech: speechOutput,
+            text: txtObj.altText,
         }));
 
         //'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_small.png', 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png'
@@ -73,23 +74,7 @@ module.exports = {
         }));
         return conv.ask(...response);
     },
-// };
 
-// //help for 
-// module.exports = {
-    // createAudioObj(conv, textObj) {
-        
-    //     var speechTxt = utils.addAudio("", lodash.sample(textObj.prompt), textObj.altText);
-    //     speechTxt = utils.addSpeak(speechTxt);
-
-    //     return conv.close(new SimpleResponse({
-    //         speech: speechTxt,
-    //         text: '',
-    //     }));
-    // },
-// };
-
-// module.exports = {
     playAudio(conv) {
 
         console.log("in play audio");
@@ -97,10 +82,15 @@ module.exports = {
         // speechTxt = utils.addSpeak(speechTxt);
 
         var speechTxt = 'Notes';
-        speechTxt = utils.addSpeak(speechTxt);
+
+        var speech = new Speech();
+        speech.say(speechTxt)
+        //make it ssml
+        var speechOutput = speech.ssml();
+        // speechTxt = utils.addSpeak(speechTxt);
 
         conv.ask(new SimpleResponse({
-            speech: speechTxt,
+            speech: speechOutput,
             text: '',
         }));
 
@@ -120,12 +110,18 @@ module.exports = {
     createSimpleResponseObj(conv, audioObj, audioTxt) {
 
         console.log("from createSimpleResponseObj");
-        var speechTxt = utils.addAudio("", audioObj, audioTxt);
-        speechTxt = utils.addSpeak(speechTxt);
+
+        var speech = new Speech();
+        speech.audio(audioObj)
+        //make it ssml
+        var speechOutput = speech.ssml();
+
+        // var speechTxt = utils.addAudio("", audioObj, audioTxt);
+        // speechTxt = utils.addSpeak(speechTxt);
 
         return conv.ask(new SimpleResponse({
-            speech: speechTxt,
-            text: "",
+            speech: speechOutput,
+            text: audioTxt,
         }));
     },
 
@@ -150,14 +146,18 @@ module.exports = {
             conv.data.commentaryObj = commentaryObj;
             console.log('selected one object : ' + JSON.stringify(selectedCommentary));
 
+            var speech = new Speech();
+            speech.audio(selectedCommentary.audio)
+            //make it ssml
+            var speechOutput = speech.ssml();
+            
             //selected commentary
-            var speechTxt = utils.addAudio("", selectedCommentary.audio, selectedCommentary.altText);
-            //speechTxt = utils.addAudio(speechTxt, lodash.sample(commentary.next.prompt), commentary.next.altText);
-            speechTxt = utils.addSpeak(speechTxt);
+            // var speechTxt = utils.addAudio("", selectedCommentary.audio, selectedCommentary.altText);
+            // speechTxt = utils.addSpeak(speechTxt);
 
             return conv.ask(new SimpleResponse({
-                speech: speechTxt,
-                text: "",
+                speech: speechOutput,
+                text: selectedCommentary.altText
             }));
         } else {
             console.log('in else from commentary, going to enter help');
@@ -178,13 +178,18 @@ module.exports = {
 
             console.log('inside if help');
             // conv.user.storage.generalError = 0;
-            var speechTxt = utils.addAudio("", lodash.sample(notes.help.prompt), notes.help.altText);
-            speechTxt = utils.addSpeak(speechTxt);
-    
+            // var speechTxt = utils.addAudio("", lodash.sample(notes.help.prompt), notes.help.altText);
+            // speechTxt = utils.addSpeak(speechTxt);
+
+            var speech = new Speech();
+            speech.audio(lodash.sample(notes.help.prompt))
+            //make it ssml
+            var speechOutput = speech.ssml();
+            
             //check difference between ._sample and play for jovo framework
             return conv.ask(new SimpleResponse({
-                speech:speechTxt,
-                text: '',
+                speech: speechOutput,
+                text: notes.help.altText,
             }));
         } else if (conv.user.storage.convstate && conv.user.storage.convstate.toString().trim() == 'commentary') {
             console.log('inside else if  help');
@@ -193,25 +198,35 @@ module.exports = {
             //set this to zero
             conv.user.storage.commentaryError = 0;
 
-            var speechTxt = utils.addAudio("", lodash.sample(commentary.help.prompt), commentary.help.altText);
-            speechTxt = utils.addSpeak(speechTxt);
+            // var speechTxt = utils.addAudio("", lodash.sample(commentary.help.prompt), commentary.help.altText);
+            // speechTxt = utils.addSpeak(speechTxt);
     
+            var speech = new Speech();
+            speech.audio(lodash.sample(commentary.help.prompt))
+            //make it ssml
+            var speechOutput = speech.ssml();
+
             //check difference between ._sample and play for jovo framework
             return conv.ask(new SimpleResponse({
-                speech:speechTxt,
-                text: '',
+                speech: speechOutput,
+                text: commentary.help.altText,
             }));
     
         } else {
             console.log('inside else help');
             conv.user.storage.generalError = 0
             
-            var speechTxt = utils.addAudio("", lodash.sample(help.prompt), help.altText);
-            speechTxt = utils.addSpeak(speechTxt);
+            // var speechTxt = utils.addAudio("", lodash.sample(help.prompt), help.altText);
+            // speechTxt = utils.addSpeak(speechTxt);
     
+            var speech = new Speech();
+            speech.audio(lodash.sample(help.prompt))
+            //make it ssml
+            var speechOutput = speech.ssml();
+
             return conv.ask(new SimpleResponse({
-                speech:speechTxt,
-                text: '',
+                speech: speechOutput,
+                text: help.altText,
             }));
         }
     },
@@ -258,12 +273,17 @@ module.exports = {
                 console.log("general 2");
                 conv.user.storage.generalError = 1
 
-                var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
-                speechTxt = utils.addSpeak(speechTxt);
+                var speech = new Speech();
+                speech.audio(lodash.sample(unhandled.prompt))
+                //make it ssml
+                var speechOutput = speech.ssml();
+
+                // var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
+                // speechTxt = utils.addSpeak(speechTxt);
 
                 conv.close(new SimpleResponse({
-                    speech: speechTxt,
-                    text: '',
+                    speech: speechOutput,
+                    text: unhandled.altText,
                 }));
 
             } else if(parseInt(conv.user.storage.generalError, 10) < 2) {
@@ -271,12 +291,16 @@ module.exports = {
                 console.log("general 3");
                 conv.user.storage.generalError = parseInt(conv.user.storage.generalError, 10) +  1;
 
-                var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
-                speechTxt = utils.addSpeak(speechTxt);
-
+                // var speechTxt = utils.addAudio("", lodash.sample(unhandled.prompt), unhandled.altText);
+                // speechTxt = utils.addSpeak(speechTxt);
+                var speech = new Speech();
+                speech.audio(lodash.sample(unhandled.prompt))
+                //make it ssml
+                var speechOutput = speech.ssml();
+                
                 conv.close(new SimpleResponse({
-                    speech: speechTxt,
-                    text: '',
+                    speech: speechOutput,
+                    text: unhandled.altText,
                 }));
             }
             

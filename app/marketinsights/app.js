@@ -15,7 +15,6 @@ const { unhandled, goodbye, help } = require("./responses/exceptions");
 const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
 
 const request = require("request-promise");
-const utils = require("./util");
 const helper = require("./helper");
 // Instantiate the Dialogflow client.
 const app = dialogflow();
@@ -90,40 +89,23 @@ app.intent('NotesOnTheWeekAheadIntent', (conv) => {
     console.log('------------------------------')
     console.log(conv.user.storage.convstate);
     //adding SPEECH
-    var speechTxt = utils.addAudio("", lodash.sample(notes.intro.preprompt), "");
-    //adding REPROMPT
-    speechTxt = utils.addAudio(speechTxt, notes.preview.prompt, notes.preview.altText);
-    speechTxt = utils.addAudio(speechTxt, notes.preview.reprompt, notes.intro.altText);
-    speechTxt = utils.addSpeak(speechTxt);
-
+    // var speechTxt = utils.addAudio("", lodash.sample(notes.intro.preprompt), "");
+    // //adding REPROMPT
+    // speechTxt = utils.addAudio(speechTxt, notes.preview.prompt, notes.preview.altText);
+    // speechTxt = utils.addAudio(speechTxt, notes.preview.reprompt, notes.intro.altText);
+    // speechTxt = utils.addSpeak(speechTxt);
     var speech = new Speech();
+    speech.audio(lodash.sample(notes.intro.preprompt))
     speech.audio(notes.preview.prompt)
+    speech.audio(notes.preview.reprompt)
+
     //make it ssml
-    var speechOutput = speech.ssml(true);
+    var speechOutput = speech.ssml();
 
-    //reprompts
-    var repromptSpeech = new Speech();
-    repromptSpeech.audio(notes.preview.reprompt)
-    //make it ssml
-    var repromptSpeechOutput = repromptSpeech.ssml(true);
-
-
-    //static reprompts 
-    conv.noInputs = [
-        'Are you still there?',
-        'Hello?',
-        new SimpleResponse({
-            text: 'Talk to you later. Bye!',
-            speech: '<speak>Talk to you later. Bye!</speak>'
-        })
-    ]
-
-    
-    
     //SPEECH
     return conv.ask(new SimpleResponse({
-        speech: speechTxt,
-        text: "",
+        speech: speechOutput,
+        text: notes.intro.altText,
     }));
 
 });
@@ -221,16 +203,24 @@ app.intent('AboutDrKellyIntent', (conv) => {
     conv.data.currentIntent = conv.intent;
     console.log('in davi kelly ')
     //adding SPEECH
-    var speechTxt = utils.addAudio("", aboutDr.prompt, aboutDr.altText);
-    speechTxt = utils.addBreak(speechTxt, '500ms');
-    //adding REPROMPT
-    speechTxt = utils.addAudio(speechTxt, general.prompt, general.altText);
-    speechTxt = utils.addSpeak(speechTxt);
+    // var speechTxt = utils.addAudio("", aboutDr.prompt, aboutDr.altText);
+    // speechTxt = utils.addBreak(speechTxt, '500ms');
+    // //adding REPROMPT
+    // speechTxt = utils.addAudio(speechTxt, general.prompt, general.altText);
+    // speechTxt = utils.addSpeak(speechTxt);
+
+    var speech = new Speech();
+    speech.audio(aboutDr.prompt)
+    speech.pause('500ms')
+    speech.audio(general.prompt)
+
+    //make it ssml
+    var speechOutput = speech.ssml();
 
     //partially implemented
     conv.ask(new SimpleResponse({
-        speech: speechTxt,
-        text: '',
+        speech: speechOutput,
+        text: general.altText,
     }));
 
 });
@@ -239,17 +229,25 @@ app.intent('QuoteIntent', (conv) => {
     conv.data.previousIntent = conv.data.currentIntent;
     conv.data.currentIntent = conv.intent;
     console.log('in quote ')
-    //adding SPEECH
-    var speechTxt = utils.addAudio("", lodash.sample(quote.prompt), quote.altText);
-    speechTxt = utils.addBreak(speechTxt, '500ms');
-    //adding REPROMPT
-    speechTxt = utils.addAudio(speechTxt, general.prompt, general.altText);
-    speechTxt = utils.addSpeak(speechTxt);
+    // //adding SPEECH
+    // var speechTxt = utils.addAudio("", lodash.sample(quote.prompt), quote.altText);
+    // speechTxt = utils.addBreak(speechTxt, '500ms');
+    // //adding REPROMPT
+    // speechTxt = utils.addAudio(speechTxt, general.prompt, general.altText);
+    // speechTxt = utils.addSpeak(speechTxt);
+
+    var speech = new Speech();
+    speech.audio(lodash.sample(quote.prompt))
+    speech.pause('500ms')
+    speech.audio(general.prompt)
+
+    //make it ssml
+    var speechOutput = speech.ssml();
 
     //partially implemented
     conv.ask(new SimpleResponse({
-        speech: speechTxt,
-        text: '',
+        speech: speechOutput,
+        text: general.altText,
     }));
 
 });
@@ -258,18 +256,27 @@ app.intent('WhatIsThisIntent', (conv) => {
     conv.data.previousIntent = conv.data.currentIntent;
     conv.data.currentIntent = conv.intent;
     console.log('in what is this quote ')
-    //adding SPEECH
-    var speechTxt = utils.addAudio("", whatIsThis.prompt, whatIsThis.altText);
-    speechTxt = utils.addBreak(speechTxt, '500ms');
-    //adding REPROMPT
-    speechTxt = utils.addAudio(speechTxt, general.prompt, general.altText);
-    speechTxt = utils.addSpeak(speechTxt);
+    // //adding SPEECH
+    // var speechTxt = utils.addAudio("", whatIsThis.prompt, whatIsThis.altText);
+    // speechTxt = utils.addBreak(speechTxt, '500ms');
+    // //adding REPROMPT
+    // speechTxt = utils.addAudio(speechTxt, general.prompt, general.altText);
+    // speechTxt = utils.addSpeak(speechTxt);
+
+    var speech = new Speech();
+    speech.audio(whatIsThis.prompt)
+    speech.pause('500ms')
+    speech.audio(general.prompt)
+
+    //make it ssml
+    var speechOutput = speech.ssml();
 
     //partially implemented
     conv.ask(new SimpleResponse({
-        speech: speechTxt,
-        text: '',
+        speech: speechOutput,
+        text: general.altText,
     }));
+
 
 });
 
