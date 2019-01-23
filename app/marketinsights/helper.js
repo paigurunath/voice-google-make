@@ -13,6 +13,7 @@ const disclosures = require("./responses/disclosures");
 const commentary =  require("./responses/commentary");
 const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
 const notes = require("./responses/notes");
+const request = require("request-promise");
 
 const utils = require("./util");
 const lodash = require('lodash');

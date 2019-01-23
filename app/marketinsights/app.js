@@ -14,6 +14,7 @@ const { general, aboutDr, quote, whatIsThis } = require("./responses/easterEggs"
 const { unhandled, goodbye, help } = require("./responses/exceptions");
 const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
 
+const request = require("request-promise");
 const utils = require("./util");
 const helper = require("./helper");
 // Instantiate the Dialogflow client.
@@ -26,32 +27,88 @@ app.intent('Default Welcome Intent', (conv) => {
     console.log('-------------------------------conv---------------------------------------');
     console.log(JSON.stringify(conv));
     console.log('-------------------------------conv---------------------------------------');
-    
-    let USER_TYPE = '';
-    conv.user.storage.convstate = '';
 
-    if(conv.user.storage.visit)   {
-        console.log("in if");
-        USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-			? 'newUser'
-			: 'returningUser'
-        ;
-    } else {
-        console.log("in else");
-        USER_TYPE = 'newUser';
-    }
+    var dataObj = {};
+    dataObj.userid = conv.user._id;
+    dataObj.skillid = conv.user._id;
 
-    console.log(USER_TYPE);
+    var options = {
+      method: 'POST',
+      uri: 'http://localhost:8090/user/getUserVisitCountOnSkill',
+      body: dataObj,
+      json: true // Automatically stringifies the body to JSON
+    };
 
-    if(conv.user.storage.visit) {
-        var countVisit = conv.user.storage.visit;
-        countVisit = parseInt(countVisit, 10);
-        countVisit++;
-        conv.user.storage.visit = countVisit;
-    } else {
-        conv.user.storage.visit = 1;
-    }
-    helper.card(conv, welcome[USER_TYPE]);
+    var promiseObj = new Promise(function(resolve, reject) {
+        request(options)
+      .then(function (result) {
+          resolve(result);
+      })
+      .catch(function (err) {
+          reject();
+      });
+    });
+
+    return promiseObj.then(function(result) {
+      console.log('in promise then');
+
+      var USER_TYPE = result.visit_count < 2 ? 'newUser' : 'returningUser'
+      console.log(result.visit_count + ' visit count final ' + USER_TYPE + ' is the final ');
+
+      helper.card(conv, welcome[USER_TYPE]);
+    //   var speech = new Speech();
+    //   speech.audio(welcome[USER_TYPE].prompt);
+    //   speech.pause('500ms');
+    //   var speechOutput = speech.ssml(true);
+
+    //   return handlerInput.responseBuilder
+    //     .speak(speechOutput)
+    //     .withStandardCard(CARD.title, CARD.body, 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_small.png', 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png')
+    //     .withShouldEndSession(false)
+    //     .getResponse();
+    })
+    .catch(function(err) {
+      console.log('in promise catch');
+      console.log(err);
+      var USER_TYPE = 'newUser';
+      helper.card(conv, welcome[USER_TYPE]);
+    //   var speech = new Speech();
+    //   speech.audio(welcome[USER_TYPE].prompt);
+    //   speech.pause('500ms');
+    //   var speechOutput = speech.ssml(true);
+
+    //   return handlerInput.responseBuilder
+    //     .speak(speechOutput)
+    //     .withStandardCard(CARD.title, CARD.body, 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_small.png', 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png')
+    //     .withShouldEndSession(false)
+    //     .getResponse();
+      });
+
+    // let USER_TYPE = '';
+    // conv.user.storage.convstate = '';
+
+    // if(conv.user.storage.visit)   {
+    //     console.log("in if");
+    //     USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
+	// 		? 'newUser'
+	// 		: 'returningUser'
+    //     ;
+    // } else {
+    //     console.log("in else");
+    //     USER_TYPE = 'newUser';
+    // }
+
+    // console.log(USER_TYPE);
+
+    // if(conv.user.storage.visit) {
+    //     var countVisit = conv.user.storage.visit;
+    //     countVisit = parseInt(countVisit, 10);
+    //     countVisit++;
+    //     conv.user.storage.visit = countVisit;
+    // } else {
+    //     conv.user.storage.visit = 1;
+    // }
+    // helper.card(conv, welcome[USER_TYPE]);
 });
 
 app.intent('DisclosuresIntent', (conv) => {
