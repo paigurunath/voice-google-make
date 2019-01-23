@@ -16,24 +16,30 @@ const notes = require("./responses/notes");
 
 const utils = require("./util");
 const lodash = require('lodash');
-// exports.commentary = function(pretext){
-//     return `<speak> ${pretext.toString()} </speak>`;
-// }
+var Speech = require('ssml-builder');
 
 module.exports = {
     stop(conv) {
         
-        var speechTxt = utils.addAudio("", lodash.sample(goodbye.prompt), goodbye.altText);
-        speechTxt = utils.addSpeak(speechTxt);
+        // var speechTxt = utils.addAudio("", lodash.sample(goodbye.prompt), goodbye.altText);
+        // speechTxt = utils.addSpeak(speechTxt);
+
+        // return conv.close(new SimpleResponse({
+        //     speech: speechTxt,
+        //     text: '',
+        // }));
+
+        var speech = new Speech();
+        speech.audio(lodash.sample(goodbye.prompt))
+        speech.say(goodbye.altText)
+        //make it ssml
+        var speechOutput = speech.ssml();
 
         return conv.close(new SimpleResponse({
-            speech: speechTxt,
-            text: '',
+            speech: speechOutput,
+            text: goodbye.altText
         }));
     },
-// };
-
-// module.exports = {
     card(conv, txtObj) {
     
         console.log("from helper welcome");
@@ -48,19 +54,20 @@ module.exports = {
             text: 'Welcome to Market Insights.',
         }));
 
+        //'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_small.png', 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png'
         response.push(new BasicCard({
-            text: CARD.body,
-            title: CARD.title,
-            subtitle: 'This is a subtitle',
-            buttons: new Button({
-            title: CARD.button.text,
-            url: 'https://assistant.google.com/'
+                text: CARD.body,
+                title: CARD.title,
+                subtitle: 'Market Insights',
+                buttons: new Button({
+                title: CARD.button.text,
+                url: 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png'
             }),
             image: new Image({
-            url: 'https://image.shutterstock.com/image-photo/financial-business-color-charts-450w-1039907653.jpg',
-            alt: 'Image alternate text',
-            width: '720',
-            height: '480'
+                url: 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png',
+                alt: 'Market Insights',
+                width: '720',
+                height: '480'
             }),
             display: 'CROPPED'
         }));
