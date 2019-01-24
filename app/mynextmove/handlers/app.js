@@ -90,6 +90,10 @@ app.intent('Default Welcome Intent', (conv) => {
 });
 
 app.intent('YesIntent', (conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in YesIntent");
     // new Promise(function(resolve, reject) {
         return helper.latestIntent(conv);
@@ -97,18 +101,30 @@ app.intent('YesIntent', (conv) => {
 });
 
 app.intent('EpisodeIntent', (conv, params) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in EpisodeIntent");
     console.log('params from Episode Intent : ' + JSON.stringify(params));
     return helper.episodeIntent(conv, params);
 });
 
 app.intent('SubjectIntent', (conv, params) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in SubjectIntent");
     console.log('params from SubjectIntent : ' + JSON.stringify(params));
     return helper.subjectIntent(conv, params);
 });
 
 app.intent('HelpIntent', (conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in HelpIntent");
     var speech = new Speech();
     speech.audio(lodash.sample(errors.help.prompt));
@@ -122,19 +138,36 @@ app.intent('HelpIntent', (conv) => {
 });
 
 app.intent('NoIntent', (conv) => {
-    console.log("in NoIntent");
-    var speech = new Speech();
-    speech.audio(lodash.sample(main.goodbye.prompt));
-    //make it ssml
-    var speechOutput = speech.ssml();
 
-    conv.ask(new SimpleResponse({
-        speech: speechOutput,
-        text: "Good bye",
-    }));
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
+    console.log("in NoIntent");
+    console.log('Previous Intent : ' +  conv.data.previousIntent );
+
+    if(conv.data.previousIntent === 'Default Welcome Intent') {
+        
+        helper.sessionEndedRequest(conv);
+    } else {
+
+        var speech = new Speech();
+        speech.audio(lodash.sample(notifications.no.prompt));
+        speech.audio(lodash.sample(notifications.welcome.newUser));
+        //make it ssml
+        var speechOutput = speech.ssml();
+
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Good bye",
+        }));
+    }
 });
 
 app.intent('WhoIsIntent', (conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in WhoIsIntent");
     var speech = new Speech();
     speech.audio(main.bio.prompt);
@@ -148,6 +181,10 @@ app.intent('WhoIsIntent', (conv) => {
 });
 
 app.intent('LibraryIntent', (conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in LibraryIntent");
     var speech = new Speech();
     speech.audio(library.intro.prompt);
@@ -161,6 +198,10 @@ app.intent('LibraryIntent', (conv) => {
 });
 
 app.intent('DescriptionIntent', (conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("in DescriptionIntent");
     var speech = new Speech();
     speech.audio(library.description.prompt);
@@ -174,6 +215,9 @@ app.intent('DescriptionIntent', (conv) => {
 });
 
 app.intent('MoreIntent', (conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
 
     console.log("in MoreIntent");
 
@@ -209,6 +253,10 @@ app.intent('MoreIntent', (conv) => {
 
 // app.intent('Default Fallback Intent', (conv) => {
 app.fallback((conv) => {
+
+    conv.data.previousIntent = conv.data.currentIntent;
+    conv.data.currentIntent = conv.intent;
+
     console.log("going to fallback...")
 
     // console.log('-----------------fallback ------------------------');

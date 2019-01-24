@@ -1,6 +1,6 @@
 module.exports = {
     intro: {
-        prompt: "https://am.jpmorgan.com/blob-gim/1383563676037/83456/4.0.library.yes.1.mp3"
+        prompt: "https://s3.amazonaws.com/alexa-chase-voice/MichaelLierschRecordings/library/4.0.library.yes.1.mp3"
     },
     episodes: {
         prompt: "Coming right up. We have",

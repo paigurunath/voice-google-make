@@ -24,24 +24,36 @@ const lodash = require('lodash');
 
 module.exports = {
     end(conv){
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('end function');
         this.sessionEndedRequest(conv);
     },
     sessionEndedRequest(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('SessionEndedRequest');
         var speech = new Speech();
         speech.audio(lodash.sample(main.goodbye.prompt))
 
         //make it ssml
-        var speechOutput = speech.ssml(true);
+        var speechOutput = speech.ssml();
 
         return conv.close(new SimpleResponse({
             speech: speechOutput,
-            text: 'Welcome',
+            text: main.goodbye.text,
         }));
     },
 
     newWelcomeIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('new welcome intent');
         var speech = new Speech();
         speech.audio(lodash.sample(main.welcome.new))
@@ -55,59 +67,45 @@ module.exports = {
     },
 
     welcomeIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('welcome intent');
 
         var speech = new Speech();
         speech.audio(lodash.sample(main.welcome.returning))
         //make it ssml
-        var speechOutput = speech.ssml(true);
-
-        //reprompts
-        var repromptSpeech = new Speech();
-        repromptSpeech.audio(lodash.sample(main.welcome.reprompt))
-        //make it ssml
-        var repromptSpeechOutput = repromptSpeech.ssml(true);
-
-        //reprompts
-        var repromptSpeech1 = new Speech();
-        repromptSpeech1.audio(lodash.sample(main.welcome.reprompt))
-        //make it ssml
-        var repromptSpeechOutput1 = repromptSpeech1.ssml(true);
-
-        //static reprompts 
-        conv.noInputs = [
-            new SimpleResponse({
-                text: repromptSpeechOutput,
-                speech: '<speak>Talk to you later. Bye!</speak>'
-            }),
-            new SimpleResponse({
-                text: repromptSpeechOutput1,
-                speech: '<speak>Talk to you later. Bye!</speak>'
-            }),
-            new SimpleResponse({
-                text: 'Talk to you later. Bye!',
-                speech: '<speak>Talk to you later. Bye!</speak>'
-            })
-        ]
+        var speechOutput = speech.ssml();
 
         return conv.ask(new SimpleResponse({
             speech: speechOutput,
-            text: "",
+            text: 'Welcome',
         }));
     },
 
     noIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('no intent');
         this.end(conv);
     },
 
     yesIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('yes intent');
         return this.latestIntent(conv);
     },
 
     async latestIntent(conv) {
 
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
         // async
         console.log('in latest from yes');
         // await
@@ -131,48 +129,53 @@ module.exports = {
             url: latest.audioURL,
             description: latest.description,
             icon: new Image({
-                url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
+                url: 'https://s3.amazonaws.com/alexa-chase-voice/MichaelLierschRecordings/image/512.png',
                 alt: 'Media icon',
             }),
         }));
 
-        console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
         return conv.ask(new Suggestions("Episode"));
-          
     },
 
-    playAudio(conv, episode) {
+    // playAudio(conv, episode) {
 
-        console.log("in play audio");
+    //     conv.data.previousIntent = conv.data.currentIntent;
+    //     conv.data.currentIntent = conv.intent;
+
+    //     console.log("in play audio");
       
-        return new Promise(function() {
-            var speech = new Speech();
-            speech.audio(lodash.sample(audioPlayer.yes.prompt))
-            //make it ssml
-            var speechOutput = speech.ssml();
+    //     return new Promise(function() {
+    //         var speech = new Speech();
+    //         speech.audio(lodash.sample(audioPlayer.yes.prompt))
+    //         //make it ssml
+    //         var speechOutput = speech.ssml();
             
-            conv.ask(new SimpleResponse({
-                speech: speechOutput,
-                text: '',
-            }));
+    //         conv.ask(new SimpleResponse({
+    //             speech: speechOutput,
+    //             text: '',
+    //         }));
     
-            conv.ask(new MediaObject({
-                name: episode.title,
-                url: episode.audioURL,
-                description: episode.description,
-                icon: new Image({
-                    url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
-                    alt: 'Media icon',
-                }),
-            }));
+    //         conv.ask(new MediaObject({
+    //             name: episode.title,
+    //             url: episode.audioURL,
+    //             description: episode.description,
+    //             icon: new Image({
+    //                 url: 'https://s3.amazonaws.com/alexa-chase-voice/myNextMove1400x1400px.png',
+    //                 alt: 'Media icon',
+    //             }),
+    //         }));
     
-            console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
-            conv.ask(new Suggestions("Episode"));
-        })
+    //         console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
+    //         conv.ask(new Suggestions("Episode"));
+    //     })
        
-    },
+    // },
 
     introIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('intro Intent');
         var speech = new Speech();
         speech.audio(library.intro.prompt)
@@ -187,11 +190,19 @@ module.exports = {
     },
 
     episodeOnlyIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('episode only intent');
         this.episodeOnlyIntent(conv);
     },
 
     async episodeIntent(conv, params) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('episode intent');
 
         let episodeNumber ='';
@@ -224,6 +235,9 @@ module.exports = {
     
     playAudio2(conv, episode) {
 
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log("in play audio");
       
         var speech = new Speech();
@@ -241,7 +255,7 @@ module.exports = {
             url: episode.audioURL,
             description: episode.description,
             icon: new Image({
-                url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
+                url: 'https://s3.amazonaws.com/alexa-chase-voice/myNextMove1400x1400px.png',
                 alt: 'Media icon',
             }),
         }));
@@ -250,11 +264,19 @@ module.exports = {
     },
 
     subjectOnlyIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('subject only intent');
         this.subjectIntent(conv);
     },
 
     async subjectIntent(conv, params) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('subject intent');
 
         let subject ='';
@@ -293,6 +315,10 @@ module.exports = {
     },
 
     promptEpisodes(conv, data) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('in PromptEpisodes');
         const titles = data.titles;
         const subSet = titles.splice(0, 3);
@@ -331,6 +357,10 @@ module.exports = {
     },
 
     descriptionIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('description Intent');
 
         var speech = new Speech();
@@ -364,6 +394,10 @@ module.exports = {
     },
 
     moreIntent(conv) {
+
+        conv.data.previousIntent = conv.data.currentIntent;
+        conv.data.currentIntent = conv.intent;
+
         console.log('more intent');
 
         // get the titles from the session
