@@ -7,20 +7,20 @@ const {
     MediaObject,
     Suggestions
 } = require('actions-on-google');
-const Speech = require('ssml-builder');
-const lodash = require('lodash');
 
-const audioPlayer = require("../responses/audioPlayer");
-const errors = require("../responses/errors");
-const library = require("../responses/library");
-const main = require("../responses/main");
-const notifications = require("../responses/notifications");
-const createOxfordCommaList = require('../../libs/utils').createOxfordCommaList;
+const audioPlayer = require("./responses/audioPlayer");
+const errors = require("./responses/errors");
+const library = require("./responses/library");
+const main = require("./responses/main");
+const notifications = require("./responses/notifications");
+const createOxfordCommaList = require('./libs/utils').createOxfordCommaList;
 
 const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/My-Next-Move';
-const AudioFeed = require('./libs/audio-feed-api');
+const AudioFeed = require('../libs/audio-feed-api');
 const audioFeed = new AudioFeed(feedUrl);
 
+var Speech = require('ssml-builder');
+const lodash = require('lodash');
 
 module.exports = {
     end(conv){

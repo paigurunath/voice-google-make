@@ -1,15 +1,15 @@
 const Speech = require('ssml-builder');
 const lodash = require('lodash');
 const request = require('request-promise');
-
-const easterEggs = require('../responses/easterEggs');
-const exceptions = require('../responses/exceptions');
-const welcome = require('../responses/welcome');
 const SimpleResponse = require('actions-on-google').SimpleResponse;
 const MediaObject = require('actions-on-google').MediaObject;
 const Image = require('actions-on-google').Image;
 const Suggestions = require('actions-on-google').Suggestions;
 const dialogflow = require('actions-on-google').dialogflow;
+
+const easterEggs = require('../responses/easterEggs');
+const exceptions = require('../responses/exceptions');
+const welcome = require('../responses/welcome');
 const helper = require('./helper');
 
 // Instantiate the Dialogflow client.

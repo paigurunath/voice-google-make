@@ -2,19 +2,20 @@
 
 // Import the Dialogflow module from the Actions on Google client library.
 const SimpleResponse = require('actions-on-google').SimpleResponse;
-
 const dialogflow = require('actions-on-google').dialogflow;
-
+const request = require("request-promise");
 const lodash = require('lodash');
+const Speech = require('ssml-builder');
+
 const audioPlayer = require("../responses/audioPlayer");
 const errors = require("../responses/errors");
 const library = require("../responses/library");
 const main = require("../responses/main");
 const notifications = require("../responses/notifications");
-const helper = require('../helper');
-var Speech = require('ssml-builder');
+const helper = require('./helper');
 
-const request = require("request-promise");
+
+
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 

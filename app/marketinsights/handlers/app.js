@@ -2,23 +2,22 @@
 
 // Import the Dialogflow module from the Actions on Google client library.
 const SimpleResponse = require('actions-on-google').SimpleResponse;
-
 const dialogflow = require('actions-on-google').dialogflow;
-
-const lodash = require('lodash');
-const welcome = require("./responses/welcome");
-const disclosures = require("./responses/disclosures");
-const notes = require("./responses/notes");
-const commentary =  require("./responses/commentary");
-const { general, aboutDr, quote, whatIsThis } = require("./responses/easterEggs");
-const { unhandled, goodbye, help } = require("./responses/exceptions");
-const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
-
+const Speech = require('ssml-builder');
 const request = require("request-promise");
+const lodash = require('lodash');
+
+const welcome = require("../responses/welcome");
+const disclosures = require("../responses/disclosures");
+const notes = require("../responses/notes");
+const commentary =  require("../responses/commentary");
+const { general, aboutDr, quote, whatIsThis } = require("../responses/easterEggs");
+const { unhandled, goodbye, help } = require("../responses/exceptions");
+const { commentariesById, allCommentaryIds } = require("../responses/commentaryMap");
 const helper = require("./helper");
+
 // Instantiate the Dialogflow client.
 const app = dialogflow();
-var Speech = require('ssml-builder');
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");

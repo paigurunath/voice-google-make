@@ -3,7 +3,8 @@
 // Import the Dialogflow module from the Actions on Google client library.
 const express = require('express')
 const bodyParser = require('body-parser')
-var marketInsights = require('./app/marketinsights/app');
+
+var marketInsights = require('./app/marketinsights/handlers/app');
 var myNextMove = require('./app/mynextmove/handlers/app');
 var eyeOnTheMarket = require('./app/eyeonthemarket/handlers/app');
 

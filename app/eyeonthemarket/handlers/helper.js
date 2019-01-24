@@ -7,15 +7,14 @@ const {
     MediaObject,
     Suggestions
 } = require('actions-on-google');
-
 const request = require('request-promise');
+const Speech = require('ssml-builder');
+const lodash = require('lodash');
+
+const welcome = require('../responses/welcome');
 const AudioFeed = require('../../libs/audio-feed-api');
 const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/Eye-on-the-Market';
 const audioFeed = new AudioFeed(feedUrl);
-const welcome = require('../responses/welcome');
-
-var Speech = require('ssml-builder');
-const lodash = require('lodash');
 
 module.exports = {
     async latestIntent(conv, visitVal ) {

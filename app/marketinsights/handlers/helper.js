@@ -7,15 +7,14 @@ const {
     MediaObject,
     Suggestions
 } = require('actions-on-google');
+const lodash = require('lodash');
+const Speech = require('ssml-builder');
 
 const { unhandled, goodbye, help } = require("./responses/exceptions");
 const disclosures = require("./responses/disclosures");
 const commentary =  require("./responses/commentary");
 const { commentariesById, allCommentaryIds } = require("./responses/commentaryMap");
 const notes = require("./responses/notes");
-
-const lodash = require('lodash');
-var Speech = require('ssml-builder');
 
 module.exports = {
     stop(conv) {
