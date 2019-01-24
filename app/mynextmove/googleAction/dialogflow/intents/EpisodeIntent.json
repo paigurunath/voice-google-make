@@ -1,0 +1,17 @@
+{
+	"name": "EpisodeIntent",
+	"auto": true,
+	"webhookUsed": true,
+	"responses": [
+		{
+			"parameters": [
+				{
+					"isList": false,
+					"name": "episodeNumber",
+					"value": "$episodeNumber",
+					"dataType": "@sys.number"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+	"name": "CommentaryIntent",
+	"auto": true,
+	"webhookUsed": true,
+	"responses": [
+		{
+			"parameters": [
+				{
+					"isList": false,
+					"name": "commentaryNumber",
+					"value": "$commentaryNumber",
+					"dataType": "@sys.number"
+				}
+			]
+		}
+	]
+}

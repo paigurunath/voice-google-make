@@ -1,0 +1,18 @@
+{
+	"name": "PlayClipForIntent",
+	"auto": true,
+	"webhookUsed": true,
+	"priority": 250000,
+	"intents": [
+		{
+			"data": [
+				{
+					"text": "audio for",
+					"userDefined": false
+				}
+			],
+			"isTemplate": false,
+			"count": 0
+		}
+	]
+}

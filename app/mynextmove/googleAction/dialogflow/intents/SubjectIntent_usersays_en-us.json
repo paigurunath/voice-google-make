@@ -1,0 +1,94 @@
+[
+	{
+		"data": [
+			{
+				"text": "subject",
+				"userDefined": true,
+				"alias": "subject",
+				"meta": "@SUBJECT"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "play ",
+				"userDefined": false
+			},
+			{
+				"text": "subject",
+				"userDefined": true,
+				"alias": "subject",
+				"meta": "@SUBJECT"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "tell me about ",
+				"userDefined": false
+			},
+			{
+				"text": "subject",
+				"userDefined": true,
+				"alias": "subject",
+				"meta": "@SUBJECT"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "can you talk about ",
+				"userDefined": false
+			},
+			{
+				"text": "subject",
+				"userDefined": true,
+				"alias": "subject",
+				"meta": "@SUBJECT"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "let me hear about ",
+				"userDefined": false
+			},
+			{
+				"text": "subject",
+				"userDefined": true,
+				"alias": "subject",
+				"meta": "@SUBJECT"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "let's hear about ",
+				"userDefined": false
+			},
+			{
+				"text": "subject",
+				"userDefined": true,
+				"alias": "subject",
+				"meta": "@SUBJECT"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	}
+]

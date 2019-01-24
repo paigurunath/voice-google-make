@@ -1,0 +1,5 @@
+{
+	"name": "QuoteIntent",
+	"auto": true,
+	"webhookUsed": true
+}

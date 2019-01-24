@@ -1,0 +1,29 @@
+[
+	{
+		"value": "spend",
+		"synonyms": [
+			"spend",
+			"spending"
+		]
+	},
+	{
+		"value": "divide",
+		"synonyms": [
+			"divide",
+			"division"
+		]
+	},
+	{
+		"value": "grow",
+		"synonyms": [
+			"grow",
+			"growth"
+		]
+	},
+	{
+		"value": "preserve",
+		"synonyms": [
+			"preserve"
+		]
+	}
+]

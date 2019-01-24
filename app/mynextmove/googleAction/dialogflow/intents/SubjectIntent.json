@@ -1,0 +1,17 @@
+{
+	"name": "SubjectIntent",
+	"auto": true,
+	"webhookUsed": true,
+	"responses": [
+		{
+			"parameters": [
+				{
+					"isList": false,
+					"name": "subject",
+					"value": "$subject",
+					"dataType": "@SUBJECT"
+				}
+			]
+		}
+	]
+}

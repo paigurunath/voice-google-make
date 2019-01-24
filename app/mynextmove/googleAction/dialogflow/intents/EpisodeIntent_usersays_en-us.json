@@ -1,0 +1,126 @@
+[
+	{
+		"data": [
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "play ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "play number ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "play episode ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "play episode number ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "episode ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "let me hear number ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "let me hear ",
+				"userDefined": false
+			},
+			{
+				"text": "episodeNumber",
+				"userDefined": true,
+				"alias": "episodeNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	}
+]

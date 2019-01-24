@@ -1,0 +1,5 @@
+{
+	"name": "NextMessageIntent",
+	"auto": true,
+	"webhookUsed": true
+}

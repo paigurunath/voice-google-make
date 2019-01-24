@@ -1,0 +1,8 @@
+{
+	"description": "",
+	"webhook": {
+		"url": "arn:aws:lambda:us-east-1:214554526846:function:my-next-move-development",
+		"available": true
+	},
+	"language": "en"
+}

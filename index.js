@@ -12,9 +12,6 @@ var port = process.env.VCAP_APP_PORT || 3000;
 
 const expressApp = express().use(bodyParser.json())
 
-//third middleware
-// expressApp.use((request,next,cb)=>{
-
 marketInsights.middleware((conv) => {
     console.log('------------------------------middleware--------------------------------');
     console.log(JSON.stringify(conv));
