@@ -16,7 +16,9 @@ const config = require('../../config/config.json');
 const app = dialogflow();
 
 app.intent('Default Welcome Intent', (conv) => {
-    console.log("welcome");
+    console.log('-----------------------------eyeOnTheMarket-middleware---log-----------------------------');
+    console.log("welcome log : " + JSON.stringify(conv));
+    console.log('-----------------------------eyeOnTheMarket-middleware---log-----------------------------');
 
     var dataObj = {};
     dataObj.userid = conv.user._id;

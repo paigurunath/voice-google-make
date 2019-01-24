@@ -14,11 +14,39 @@ var port = process.env.VCAP_APP_PORT || 3000;
 const expressApp = express().use(bodyParser.json())
 
 marketInsights.middleware((conv) => {
-    console.log('------------------------------middleware--------------------------------');
+    console.log('-----------------------------marketInsights-middleware--------------------------------');
     console.log(JSON.stringify(conv));
-    console.log('------------------------------middleware--------------------------------');
+    console.log('-----------------------------marketInsights-middleware--------------------------------');
 });
 
+myNextMove.middleware((conv) => {
+  console.log('-----------------------------myNextMove-middleware--------------------------------');
+  console.log(JSON.stringify(conv));
+  console.log('-----------------------------myNextMove-middleware--------------------------------');
+});
+
+eyeOnTheMarket.middleware((conv) => {
+  console.log('-----------------------------eyeOnTheMarket-middleware--------------------------------');
+  console.log(JSON.stringify(conv));
+  console.log('-----------------------------eyeOnTheMarket-middleware--------------------------------');
+});
+
+
+// var mung = require('express-mung');
+
+// expressApp.use(mung.json(
+//   function transform(body, req, res) {
+//       // do something with body
+//       console.log('-----------------------------eyeOnTheMarket-middleware--------------------------------');
+//       // console.log(JSON.stringify(body));
+//       // console.log('-----------------------------eyeOnTheMarket-middleware--------------------------------');
+//       // console.log(JSON.stringify(req));
+//       // console.log('-----------------------------eyeOnTheMarket-middleware--------------------------------');
+//       console.log(JSON.stringify(res));
+//       console.log('-----------------------------eyeOnTheMarket-middleware--------------------------------');
+//       // next();
+//   }
+// ));
 // expressApp.use((request,response, next)=>{
 //     console.log('--------------------------------------------------request------------------------------');
 //     console.log(JSON.stringify(request.body));
@@ -37,7 +65,7 @@ marketInsights.middleware((conv) => {
    
 // });
 
-expressApp.use(logResponseBody);
+// expressApp.use(logResponseBody);
 
 expressApp.post('/voice/google/marketinsights', marketInsights);
 expressApp.post('/voice/google/mynextmove', myNextMove);
@@ -51,9 +79,11 @@ expressApp.listen(port, function () {
 });
 
 function logResponseBody(req, res, next) {
-    console.log('--------------------------response--------------------------------');
+    console.log('----------------------1----response--------------------------------');
     console.log(res.end)
-    console.log('--------------------------response--------------------------------');
+    console.log('----------------------2----response--------------------------------');
+    console.log(req)
+    console.log('----------------------3----response--------------------------------');
   var oldWrite = res.write,
       oldEnd = res.end;
 
@@ -70,8 +100,8 @@ function logResponseBody(req, res, next) {
       chunks.push(chunk);
 
     var body = Buffer.concat(chunks).toString('utf8');
-    console.log(req.path, body);
-    console.log(body)
+    // console.log(req.path, body);
+    // console.log(body)
     oldEnd.apply(res, arguments);
   };
 
