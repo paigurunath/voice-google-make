@@ -9,7 +9,7 @@ const {
 } = require('actions-on-google');
 
 const request = require('request-promise');
-const AudioFeed = require('../libs/audio-feed-api');
+const AudioFeed = require('../../libs/audio-feed-api');
 const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/Eye-on-the-Market';
 const audioFeed = new AudioFeed(feedUrl);
 const welcome = require('../responses/welcome');
