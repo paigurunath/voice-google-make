@@ -28,7 +28,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     var options = {
       method: 'POST',
-      uri: feedUrl,
+      uri: 'http://localhost:8090/user/getUserVisitCountOnSkill',
       body: dataObj,
       json: true // Automatically stringifies the body to JSON
     };
@@ -43,37 +43,18 @@ app.intent('Default Welcome Intent', (conv) => {
           });
     });
 
+    var visitVal = 0;
     return promiseObj.then(function(result) {
+        visitVal = result.visit_count;
 
-      // if (!this.user().data.subscription) this.user().data.subscription = false;
-      // const subCheck = this.user().data.subscription;
-      const subCheck = false;
-      const USER_TYPE = result.visit_count < 2 ? 'newUser' : subCheck ? 'subscribedUser' : 'returningUser'
-      
-      var speech = new Speech();
-        var altText = 'Welcome';
- 
-      if(result.visit_count < 2) {
-        speech.audio(welcome.newUser.google);
-        
-      } else if(result.visit_count >= 2) {
-        speech.audio(lodash.sample(welcome.subscribedUser.prompt));
-        altText = 'Welcome back! ';
-      }
-
-      var speechOutput = speech.ssml(true);
-     
-      conv.ask(new SimpleResponse({
-        speech: speechOutput,
-        text: altText,
-      }));
-
-      return helper.latestIntent(conv); 
+        console.log("1 welcome");
+        return helper.latestIntent(conv, visitVal); 
     })
     .catch(function(err) {
       console.log('in promise catch');
       console.log(err);
-      return helper.latestIntent(conv); 
+      console.log("2 welcome");
+      return helper.latestIntent(conv, visitVal); 
     });
     
 });

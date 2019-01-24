@@ -63,8 +63,8 @@ class AudioFeed {
         if(!this.feed) { throw new Error('No feed data available') };
          
         return this.feed.sort(function(a,b) {
-            console.log("getSorted a : " + a.episode_num);
-            console.log("getSorted b : " + b.episode_num);
+            // console.log("getSorted a : " + a.episode_num);
+            // console.log("getSorted b : " + b.episode_num);
             return b.episode_num - a.episode_num;
             // var sortedData = b.episode_num - a.episode_num;
             // return this.feed[sortedData - 1].audioURL;
