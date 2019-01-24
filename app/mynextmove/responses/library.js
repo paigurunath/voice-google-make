@@ -13,7 +13,7 @@ module.exports = {
         repromptMore: "You can also say more or library to go back to the main menu. What will it be?"
     },
     description: {
-        prompt: "https://am.jpmorgan.com/blob-gim/1383563676037/83456/4.0.library.desc.1.mp3"
+        prompt: "https://s3.amazonaws.com/alexa-chase-voice/MichaelLierschRecordings/library/4.0.library.desc.1.mp3"
     },
     unhandled: {
         prompt: [
