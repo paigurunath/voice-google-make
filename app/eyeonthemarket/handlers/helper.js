@@ -18,29 +18,15 @@ var Speech = require('ssml-builder');
 const lodash = require('lodash');
 
 module.exports = {
-    async latestIntent(conv) {
+    async latestIntent(conv ) {
 
         // async
         console.log('getting feed for eye on the market');
-        // await
         const feed =  await audioFeed.getJSONFeed(feedUrl);
-        //console.log('feed data : ' + JSON.stringify(feed.feed));
-
-        // const audioURL = feed.getSortedAudioUrl();
         const sortedData = feed.getSortedAudioUrl();
         const audioURLFeed = sortedData[sortedData.length - 1].audioURL
 
         console.log('latest ===>', audioURLFeed);
-
-        var speech = new Speech();
-        speech.audio(welcome.newUser.google);
-        //make it ssml
-        var speechOutput = speech.ssml();
-        
-        conv.ask(new SimpleResponse({
-            speech: speechOutput,
-            text: 'Welcome',
-        }));
 
         conv.ask(new MediaObject({
             name: 'Welcome',
@@ -52,7 +38,6 @@ module.exports = {
             }),
         }));
 
-        console.log('before returning!!!!!!!!!!!!!!!!!!!!!!!!!');
         return conv.ask(new Suggestions("Welcome"));
           
     }

@@ -60,33 +60,6 @@ app.intent('Default Welcome Intent', (conv) => {
       console.log(err);
       helper.newWelcomeIntent(conv);
     });
-    // conv.noInputs
-    // let USER_TYPE = '';
-    // conv.user.storage.convstate = '';
-
-    // if(conv.user.storage.visit)   {
-    //     console.log("in if");
-    //     USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-	// 		? 'newUser'
-	// 		: 'returningUser'
-    //     ;
-    // } else {
-    //     console.log("in else");
-    //     USER_TYPE = 'newUser';
-    // }
-
-    // console.log(USER_TYPE);
-
-    // if(conv.user.storage.visit) {
-    //     var countVisit = conv.user.storage.visit;
-    //     countVisit = parseInt(countVisit, 10);
-    //     countVisit++;
-    //     conv.user.storage.visit = countVisit;
-    // } else {
-    //     conv.user.storage.visit = 1;
-    // }
-    // // helper.card(conv, welcome[USER_TYPE]);
-    // helper.newWelcomeIntent(conv);
 });
 
 app.intent('YesIntent', (conv) => {
@@ -95,9 +68,7 @@ app.intent('YesIntent', (conv) => {
     conv.data.currentIntent = conv.intent;
 
     console.log("in YesIntent");
-    // new Promise(function(resolve, reject) {
-        return helper.latestIntent(conv);
-    // });
+    return helper.latestIntent(conv);
 });
 
 app.intent('EpisodeIntent', (conv, params) => {
@@ -220,25 +191,6 @@ app.intent('MoreIntent', (conv) => {
     conv.data.currentIntent = conv.intent;
 
     console.log("in MoreIntent");
-
-    // if(!titles.length) {
-    //     let speech = this.speechBuilder()
-    //         .addAudio(library.nocontent.prompt, "$")
-
-    //     let reprompt = this.speechBuilder()
-    //         .addAudio(library.nocontent.prompt, "$")
-
-    //     this.ask(speech, reprompt);
-    // } else {
-    //     const data =  {
-    //         titles: titles,
-    //         prompt: moreEpisodes.prompt,
-    //         reprompt: moreEpisodes.reprompt,
-    //         repromptMore: moreEpisodes.repromptMore
-    //     }
-    //     this.toStateIntent(state.LIBRARY, 'PromptEpisodes', data);
-    // }
-
 
     var speech = new Speech();
     speech.audio(main.bio.prompt);

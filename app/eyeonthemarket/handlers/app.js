@@ -12,39 +12,70 @@ const Suggestions = require('actions-on-google').Suggestions;
 const dialogflow = require('actions-on-google').dialogflow;
 const helper = require('./helper');
 
+const feedUrl = "https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/Eye-on-the-Market";
+const AudioFeed = require('../libs/audio-feed-api');
+const audioFeed = new AudioFeed(feedUrl);
+
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");
 
-    conv.noInputs
-    let USER_TYPE = '';
-    conv.user.storage.convstate = '';
+    var dataObj = {};
+    dataObj.userid = conv.user._id;
+    dataObj.skillid = conv.user._id;
 
-    if(conv.user.storage.visit)   {
-        console.log("in if");
-        USER_TYPE = parseInt(conv.user.storage.visit, 10) < 2
-			? 'newUser'
-			: 'returningUser'
-        ;
-    } else {
-        console.log("in else");
-        USER_TYPE = 'newUser';
-    }
+    var options = {
+      method: 'POST',
+      uri: feedUrl,
+      body: dataObj,
+      json: true // Automatically stringifies the body to JSON
+    };
 
-    console.log(USER_TYPE);
+    var promiseObj = new Promise(function(resolve, reject) {
+        request(options)
+          .then(function (result) {
+              resolve(result);
+          })
+          .catch(function (err) {
+              reject();
+          });
+    });
 
-    if(conv.user.storage.visit) {
-        var countVisit = conv.user.storage.visit;
-        countVisit = parseInt(countVisit, 10);
-        countVisit++;
-        conv.user.storage.visit = countVisit;
-    } else {
-        conv.user.storage.visit = 1;
-    }
+    return promiseObj.then(function(result) {
 
-    return helper.latestIntent(conv); 
+      // if (!this.user().data.subscription) this.user().data.subscription = false;
+      // const subCheck = this.user().data.subscription;
+      const subCheck = false;
+      const USER_TYPE = result.visit_count < 2 ? 'newUser' : subCheck ? 'subscribedUser' : 'returningUser'
+      
+      var speech = new Speech();
+        var altText = 'Welcome';
+ 
+      if(result.visit_count < 2) {
+        speech.audio(welcome.newUser.google);
+        
+      } else if(result.visit_count >= 2) {
+        speech.audio(lodash.sample(welcome.subscribedUser.prompt));
+        altText = 'Welcome back! ';
+      }
+
+      var speechOutput = speech.ssml(true);
+     
+      conv.ask(new SimpleResponse({
+        speech: speechOutput,
+        text: altText,
+      }));
+
+      return helper.latestIntent(conv); 
+    })
+    .catch(function(err) {
+      console.log('in promise catch');
+      console.log(err);
+      return helper.latestIntent(conv); 
+    });
+    
 });
 
 app.intent('NewContentIntent', (conv) => {

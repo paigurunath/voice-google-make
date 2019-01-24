@@ -70,6 +70,12 @@ class AudioFeed {
             // return this.feed[sortedData - 1].audioURL;
         });
     }
+
+    getVisits() {
+        if(!this.feed) { throw new Error('No feed data available') };
+         
+        return this.feed.visit_count;
+    }
 }
 
 module.exports = AudioFeed;
