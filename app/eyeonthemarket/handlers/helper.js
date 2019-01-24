@@ -12,9 +12,11 @@ const Speech = require('ssml-builder');
 const lodash = require('lodash');
 
 const welcome = require('../responses/welcome');
+const config = require('../../config/config.json');
 const AudioFeed = require('../../libs/audio-feed-api');
-const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/Eye-on-the-Market';
-const audioFeed = new AudioFeed(feedUrl);
+
+const feedUrl = config.eyeonthemarket.feedUrl;
+const audioFeed = new AudioFeed(config.eyeonthemarket.feedUrl);
 
 module.exports = {
     async latestIntent(conv, visitVal ) {
@@ -47,7 +49,7 @@ module.exports = {
     
         var options = {
             method: 'POST',
-            uri: 'http://localhost:8090/user/updateSkillAudio',
+            uri: config.dbServiceBase + config.updateSkillAudio,
             body: dataObj,
             json: true // Automatically stringifies the body to JSON
         };

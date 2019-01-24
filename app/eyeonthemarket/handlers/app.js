@@ -11,7 +11,7 @@ const easterEggs = require('../responses/easterEggs');
 const exceptions = require('../responses/exceptions');
 const welcome = require('../responses/welcome');
 const helper = require('./helper');
-
+const config = require('../../config/config.json');
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 
@@ -24,7 +24,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     var options = {
       method: 'POST',
-      uri: 'http://localhost:8090/user/getUserVisitCountOnSkill',
+      uri: config.dbServiceBase + config.getUserVisitCountOnSkill,
       body: dataObj,
       json: true // Automatically stringifies the body to JSON
     };
@@ -77,7 +77,7 @@ app.intent('PodcastIntent', (conv) => {
 
     var options = {
         method: 'POST',
-        uri: 'http://localhost:8090/user/getAudioUrlOnUserSkillId',
+        uri: config.dbServiceBase + config.getAudioUrlOnUserSkillId,
         body: dataObj,
         json: true // Automatically stringifies the body to JSON
     };

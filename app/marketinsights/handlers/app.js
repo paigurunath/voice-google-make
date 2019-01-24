@@ -12,10 +12,9 @@ const disclosures = require("../responses/disclosures");
 const notes = require("../responses/notes");
 const commentary =  require("../responses/commentary");
 const { general, aboutDr, quote, whatIsThis } = require("../responses/easterEggs");
-const { unhandled, goodbye, help } = require("../responses/exceptions");
-const { commentariesById, allCommentaryIds } = require("../responses/commentaryMap");
+const { commentariesById } = require("../responses/commentaryMap");
 const helper = require("./helper");
-
+const config = require('../../config/config.json');
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 
@@ -32,7 +31,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     var options = {
       method: 'POST',
-      uri: 'http://localhost:8090/user/getUserVisitCountOnSkill',
+      uri: config.dbServiceBase + config.getUserVisitCountOnSkill,
       body: dataObj,
       json: true // Automatically stringifies the body to JSON
     };

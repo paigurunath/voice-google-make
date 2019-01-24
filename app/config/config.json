@@ -1,31 +1,14 @@
 {
-    
-    "development": {
-        "username": "root",
-        "password": "root",
-        "database": "voice",
-        "host": "localhost",
-        "dialect": "mysql",
-        "port": 3306,
-        "logging": false,
-        "pool": {
-            "max": 10,
-            "min": 1,
-            "idle": 100000
-        }
+    "dbServiceBase": "http://localhost:8090",
+    "dbService" : {
+        "getUserVisitCountOnSkill":"/user/getUserVisitCountOnSkill",
+        "getAudioUrlOnUserSkillId":"/user/getAudioUrlOnUserSkillId",
+        "updateSkillAudio":"/user/updateSkillAudio"
     },
-    "dev": {
-        "username": "root",
-        "password": "root",
-        "database": "voice",
-        "host": "localhost",
-        "dialect": "mysql",
-        "port": 3306,
-        "logging": false,
-        "pool": {
-            "max": 10,
-            "min": 1,
-            "idle": 100000
-        }
+    "mynextmove": {
+        "feedUrl": "https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/My-Next-Move"
+    },
+    "eyeonthemarket": {
+        "feedUrl": "https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/Eye-on-the-Market"
     }
 }

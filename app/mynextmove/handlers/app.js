@@ -7,15 +7,12 @@ const request = require("request-promise");
 const lodash = require('lodash');
 const Speech = require('ssml-builder');
 
-const audioPlayer = require("../responses/audioPlayer");
 const errors = require("../responses/errors");
 const library = require("../responses/library");
 const main = require("../responses/main");
 const notifications = require("../responses/notifications");
 const helper = require('./helper');
-
-
-
+const config = require('../../config/config.json');
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 
@@ -32,7 +29,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     var options = {
       method: 'POST',
-      uri: 'http://localhost:8090/user/getUserVisitCountOnSkill',
+      uri: config.dbServiceBase + config.getUserVisitCountOnSkill,
       body: dataObj,
       json: true // Automatically stringifies the body to JSON
     };

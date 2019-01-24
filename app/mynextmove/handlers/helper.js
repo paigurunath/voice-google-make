@@ -16,10 +16,11 @@ const library = require("../responses/library");
 const main = require("../responses/main");
 const notifications = require("../responses/notifications");
 const createOxfordCommaList = require('../../libs/utils').createOxfordCommaList;
+const config = require('../../config/config.json');
 
-const feedUrl = 'https://am.jpmorgan.com/us/en/asset-management/gim/adv/alexarss/voice-insights/My-Next-Move';
-const AudioFeed = require('./libs/audio-feed-api');
-const audioFeed = new AudioFeed(feedUrl);
+const feedUrl = config.mynextmove.feedUrl;
+const AudioFeed = require('../../libs/audio-feed-api');
+const audioFeed = new AudioFeed(config.mynextmove.feedUrl);
 
 
 module.exports = {
