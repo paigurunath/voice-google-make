@@ -72,6 +72,78 @@ app.intent('NewContentIntent', (conv) => {
     }));
 });
 
+app.intent('PodcastIntent', (conv) => {
+    console.log("in PodcastIntent");
+   
+    var dataObj = {};
+    dataObj.userid = conv.user._id;
+    dataObj.skillid = conv.user._id;
+
+    var options = {
+        method: 'POST',
+        uri: 'http://localhost:8090/user/getAudioUrlOnUserSkillId',
+        body: dataObj,
+        json: true // Automatically stringifies the body to JSON
+    };
+
+    var promiseObj = new Promise(function(resolve, reject) {
+    request(options)
+        .then(function (result) {
+            resolve(result);
+        })
+        .catch(function (err) {
+            reject();
+        });
+    });
+    
+    var visitVal = 0;
+    var altText = 'Welcome!';
+
+    return promiseObj.then(function(result) {
+    console.log('--------------------------------resume related---------------------------------');
+
+        if(result.visit_count) {
+            visitVal = result.visit_count;
+        }
+        
+        var speech = new Speech();
+        
+        if(visitVal < 2) {
+            speech.audio(welcome.newUser.google);
+        } else if(visitVal >= 2) {
+            speech.audio(lodash.sample(welcome.subscribedUser.prompt));
+            altText = 'Welcome Back!'
+        }
+        var speechOutput = speech.ssml();
+
+        if(result.audiourl !== null){
+
+            conv.ask(new SimpleResponse({
+                speech: speechOutput,
+                text: altText,
+            }));
+    
+            conv.ask(new MediaObject({
+                name: 'Welcome',
+                url: result.audiourl ,
+                description: 'Welcome',
+                icon: new Image({
+                    url: 'https://storage.googleapis.com/automotive-media/album_art.jpg',
+                    alt: 'Media icon',
+                }),
+            }));
+    
+            return conv.ask(new Suggestions("Welcome"));
+        } else {
+            helper.latestIntent(conv, visitVal); 
+        }
+    })
+    .catch(function(err) {
+        console.log(err)
+        helper.latestIntent(conv, visitVal); 
+    });
+});
+
 app.intent('AboutMichaelIntent', (conv) => {
     console.log("in AboutMichaelIntent");
     var speech = new Speech();
