@@ -11,7 +11,7 @@ const easterEggs = require('../responses/easterEggs');
 const exceptions = require('../responses/exceptions');
 const welcome = require('../responses/welcome');
 const helper = require('./helper');
-const config = require('../../config/config.json');
+const config = require('../../../config/config.json');
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 

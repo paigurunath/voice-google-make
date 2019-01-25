@@ -10,11 +10,11 @@ const lodash = require('lodash');
 const audioPlayer = require("../responses/audioPlayer");
 const library = require("../responses/library");
 const main = require("../responses/main");
-const createOxfordCommaList = require('../../libs/utils').createOxfordCommaList;
-const config = require('../../config/config.json');
+const createOxfordCommaList = require('../../../libs/utils').createOxfordCommaList;
+const config = require('../../../config/config.json');
 
 const feedUrl = config.mynextmove.feedUrl;
-const AudioFeed = require('../../libs/audio-feed-api');
+const AudioFeed = require('../../../libs/audio-feed-api');
 const audioFeed = new AudioFeed(config.mynextmove.feedUrl);
 
 

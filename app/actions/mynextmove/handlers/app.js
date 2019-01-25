@@ -12,7 +12,7 @@ const library = require("../responses/library");
 const main = require("../responses/main");
 const notifications = require("../responses/notifications");
 const helper = require('./helper');
-const config = require('../../config/config.json');
+const config = require('../../../config/config.json');
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 

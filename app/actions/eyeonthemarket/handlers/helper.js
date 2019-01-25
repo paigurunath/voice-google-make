@@ -9,8 +9,8 @@ const Speech = require('ssml-builder');
 const lodash = require('lodash');
 
 const welcome = require('../responses/welcome');
-const config = require('../../config/config.json');
-const AudioFeed = require('../../libs/audio-feed-api');
+const config = require('../../../config/config.json');
+const AudioFeed = require('../../../libs/audio-feed-api');
 
 const feedUrl = config.eyeonthemarket.feedUrl;
 const audioFeed = new AudioFeed(config.eyeonthemarket.feedUrl);

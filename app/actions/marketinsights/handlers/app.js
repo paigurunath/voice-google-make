@@ -14,7 +14,7 @@ const commentary =  require("../responses/commentary");
 const { general, aboutDr, quote, whatIsThis } = require("../responses/easterEggs");
 const { commentariesById } = require("../responses/commentaryMap");
 const helper = require("./helper");
-const config = require('../../config/config.json');
+const config = require('../../../config/config.json');
 // Instantiate the Dialogflow client.
 const app = dialogflow();
 
