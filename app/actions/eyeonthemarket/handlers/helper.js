@@ -19,7 +19,7 @@ module.exports = {
     async latestIntent(conv, visitVal ) {
 
         var speech = new Speech();
-        
+        console.log("visitVal : " + visitVal);
         if(visitVal < 2) {
             speech.audio(welcome.newUser.google);
         } else if(visitVal >= 2) {
@@ -32,7 +32,12 @@ module.exports = {
         console.log('getting feed for eye on the market');
         const feed =  await audioFeed.getJSONFeed(feedUrl);
         const sortedData = feed.getSortedAudioUrl();
-        const audioURLFeed = sortedData[sortedData.length - 1].audioURL
+        
+        // console.log('Sorted data : ' + JSON.stringify(sortedData));
+        // console.log('Sorted data length  : - : ' + JSON.stringify(sortedData.length));
+        // console.log('Sorted data  : - : ' + JSON.stringify(sortedData[sortedData.length - 1]));
+        
+        const audioURLFeed = sortedData[0].audioURL
 
         console.log('latest ===>', audioURLFeed);
 

@@ -4,9 +4,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 
-var marketInsights = require('./app/marketinsights/handlers/app');
-var myNextMove = require('./app/mynextmove/handlers/app');
-var eyeOnTheMarket = require('./app/eyeonthemarket/handlers/app');
+var marketInsights = require('./app/actions/marketinsights/handlers/app');
+var myNextMove = require('./app/actions/mynextmove/handlers/app');
+var eyeOnTheMarket = require('./app/actions/eyeonthemarket/handlers/app');
 
 var NODE_ENV = process.env.NODE_ENV || 'development';
 var port = process.env.VCAP_APP_PORT || 3000;

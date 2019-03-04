@@ -13,7 +13,7 @@ const welcome = require('../responses/welcome');
 const helper = require('./helper');
 const config = require('../../../config/config.json');
 // Instantiate the Dialogflow client.
-const app = dialogflow();
+const app = dialogflow({debug: true});
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log('-----------------------------eyeOnTheMarket-middleware---log-----------------------------');
@@ -70,6 +70,24 @@ app.intent('NewContentIntent', (conv) => {
     }));
 });
 
+const intentSuggestions = [
+    'Podcast'
+  ];
+
+// Handle a media status event
+app.intent('actions.intent.MEDIA_STATUS', (conv) => {
+    
+    console.log('In media status');
+
+    const mediaStatus = conv.arguments.get('MEDIA_STATUS');
+    let response = 'Unknown media status received.';
+    if (mediaStatus && mediaStatus.status === 'FINISHED') {
+      response = 'Hope you enjoyed the tunes!';
+    }
+    conv.ask(response);
+    conv.ask(new Suggestions(intentSuggestions));
+  });
+
 app.intent('PodcastIntent', (conv) => {
     console.log("in PodcastIntent");
    
@@ -84,12 +102,16 @@ app.intent('PodcastIntent', (conv) => {
         json: true // Automatically stringifies the body to JSON
     };
 
+    console.log(1);
     var promiseObj = new Promise(function(resolve, reject) {
     request(options)
         .then(function (result) {
+            console.log(2);
             resolve(result);
+
         })
         .catch(function (err) {
+            console.log(3);
             reject();
         });
     });
@@ -114,6 +136,7 @@ app.intent('PodcastIntent', (conv) => {
         }
         var speechOutput = speech.ssml();
 
+        console.log(4);
         if(result.audiourl !== null){
 
             conv.ask(new SimpleResponse({
@@ -133,12 +156,14 @@ app.intent('PodcastIntent', (conv) => {
     
             return conv.ask(new Suggestions("Welcome"));
         } else {
-            helper.latestIntent(conv, visitVal); 
+            console.log(5);
+            return helper.latestIntent(conv, visitVal); 
         }
     })
     .catch(function(err) {
         console.log(err)
-        helper.latestIntent(conv, visitVal); 
+        console.log(6);
+        return helper.latestIntent(conv, visitVal); 
     });
 });
 
