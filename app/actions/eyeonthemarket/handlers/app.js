@@ -13,7 +13,8 @@ const welcome = require('../responses/welcome');
 const helper = require('./helper');
 const config = require('../../../config/config.json');
 // Instantiate the Dialogflow client.
-const app = dialogflow({debug: true});
+// const app = dialogflow({debug: true});
+const app = dialogflow();
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log('-----------------------------eyeOnTheMarket-middleware---log-----------------------------');
@@ -26,7 +27,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     var options = {
       method: 'POST',
-      uri: config.dbServiceBase + config.getUserVisitCountOnSkill,
+      uri: config.dbServiceBase + config.dbService.getUserVisitCountOnSkill,
       body: dataObj,
       json: true // Automatically stringifies the body to JSON
     };
@@ -97,7 +98,7 @@ app.intent('PodcastIntent', (conv) => {
 
     var options = {
         method: 'POST',
-        uri: config.dbServiceBase + config.getAudioUrlOnUserSkillId,
+        uri: config.dbServiceBase + config.dbService.getAudioUrlOnUserSkillId,
         body: dataObj,
         json: true // Automatically stringifies the body to JSON
     };
@@ -144,7 +145,9 @@ app.intent('PodcastIntent', (conv) => {
                 text: altText,
             }));
     
-            conv.ask(new MediaObject({
+            console.log('befor going ahead');
+            
+            return conv.close(new MediaObject({
                 name: 'Welcome',
                 url: result.audiourl ,
                 description: 'Welcome',
@@ -154,7 +157,8 @@ app.intent('PodcastIntent', (conv) => {
                 }),
             }));
     
-            return conv.ask(new Suggestions("Welcome"));
+            
+            // return conv.ask(new Suggestions("Welcome"));
         } else {
             console.log(5);
             return helper.latestIntent(conv, visitVal); 

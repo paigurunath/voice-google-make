@@ -51,7 +51,7 @@ module.exports = {
     
         var options = {
             method: 'POST',
-            uri: config.dbServiceBase + config.updateSkillAudio,
+            uri: config.dbServiceBase + config.dbService.updateSkillAudio,
             body: dataObj,
             json: true // Automatically stringifies the body to JSON
         };
