@@ -1,9 +1,20 @@
 const {
+    BasicCard,
     Image,
+    Button,
     SimpleResponse,
     MediaObject,
     Suggestions
 } = require('actions-on-google');
+
+// const {
+//     BasicCard,
+//     Image,
+//     Button,
+//     SimpleResponse,
+//     MediaObject,
+//     Suggestions
+// } = require('actions-on-google');
 const request = require('request-promise');
 const Speech = require('ssml-builder');
 const lodash = require('lodash');

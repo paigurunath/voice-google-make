@@ -5,6 +5,7 @@ module.exports = {
     },
     aboutDr: {
         prompt: "https://am.jpmorgan.com/blob-gim/1383544273410/83456/exception_about_author.mp3",
+        reprompt: "https://am.jpmorgan.com/blob-gim/1383609024023/83456/MI_DDK_Intro-Prompt.mp3",
         altText: "About Dr. Kelly."
     },
     quote: {

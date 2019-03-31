@@ -12,6 +12,9 @@ const exceptions = require('../responses/exceptions');
 const welcome = require('../responses/welcome');
 const helper = require('./helper');
 const config = require('../../../config/config.json');
+
+// const {actionssdk} = require('actions-on-google');
+// const app = actionssdk({verification: 'voice-example1'});
 // Instantiate the Dialogflow client.
 // const app = dialogflow({debug: true});
 const app = dialogflow();

@@ -31,7 +31,7 @@ app.intent('Default Welcome Intent', (conv) => {
 
     var options = {
       method: 'POST',
-      uri: config.dbServiceBase + config.getUserVisitCountOnSkill,
+      uri: config.dbServiceBase + config.dbService.getUserVisitCountOnSkill,
       body: dataObj,
       json: true // Automatically stringifies the body to JSON
     };
@@ -210,7 +210,7 @@ app.intent('AboutDrKellyIntent', (conv) => {
     var speech = new Speech();
     speech.audio(aboutDr.prompt)
     speech.pause('500ms')
-    speech.audio(general.prompt)
+    speech.audio(aboutDr.reprompt)
 
     //make it ssml
     var speechOutput = speech.ssml();
@@ -237,7 +237,7 @@ app.intent('QuoteIntent', (conv) => {
     var speech = new Speech();
     speech.audio(lodash.sample(quote.prompt))
     speech.pause('500ms')
-    speech.audio(general.prompt)
+    speech.audio(aboutDr.reprompt)
 
     //make it ssml
     var speechOutput = speech.ssml();
@@ -264,7 +264,7 @@ app.intent('WhatIsThisIntent', (conv) => {
     var speech = new Speech();
     speech.audio(whatIsThis.prompt)
     speech.pause('500ms')
-    speech.audio(general.prompt)
+    speech.audio(aboutDr.reprompt)
 
     //make it ssml
     var speechOutput = speech.ssml();

@@ -60,7 +60,7 @@ module.exports = {
                 subtitle: 'Market Insights',
                 buttons: new Button({
                 title: CARD.button.text,
-                url: 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png'
+                url: CARD.button.link
             }),
             image: new Image({
                 url: 'https://s3.amazonaws.com/alexa-chase-voice/image/alexa_card_logo_large.png',
