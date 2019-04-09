@@ -48,11 +48,12 @@ module.exports = {
     newWelcomeIntent(conv) {
 
         conv.data.previousIntent = conv.data.currentIntent;
-        conv.data.currentIntent = conv.intent;
+        conv.data.currentIntent = 'NewWelcomeIntent';
 
         console.log('new welcome intent');
         var speech = new Speech();
         speech.audio(lodash.sample(main.welcome.new))
+        speech.audio(lodash.sample(main.welcome.reprompt))
         //make it ssml
         var speechOutput = speech.ssml();
 
@@ -65,7 +66,7 @@ module.exports = {
     welcomeIntent(conv) {
 
         conv.data.previousIntent = conv.data.currentIntent;
-        conv.data.currentIntent = conv.intent;
+        conv.data.currentIntent = 'WelcomeIntent';
 
         console.log('welcome intent');
 

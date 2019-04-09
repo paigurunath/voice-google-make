@@ -14,7 +14,7 @@ const notifications = require("../responses/notifications");
 const helper = require('./helper');
 const config = require('../../../config/config.json');
 // Instantiate the Dialogflow client.
-const app = dialogflow();
+const app = dialogflow({'debug': true});
 
 app.intent('Default Welcome Intent', (conv) => {
     console.log("welcome");
@@ -201,6 +201,150 @@ app.intent('MoreIntent', (conv) => {
     }));
 });
 
+app.intent('no_input', (conv) => {
+    // conv.data.previousIntent = conv.data.currentIntent
+    conv.data.currentIntent = conv.intent;
+  
+    console.log("In no_input right now. ***************1 ");
+    console.log("Previous Intent : " + conv.data.previousIntent);
+  
+    const repromptCount = parseInt(conv.arguments.get('REPROMPT_COUNT'));
+    if (repromptCount === 0) {
+    conv.ask(`What was that?`);
+    } else if (repromptCount === 1) {
+    conv.ask(`Sorry I didn't catch that. Could you repeat yourself?`);
+    } else if (conv.arguments.get('IS_FINAL_REPROMPT')) {
+    conv.close(`Okay let's try this again later.`);
+    }
+});
+
+
+
+app.intent('DescriptionIntent - reprompt', (conv) => {
+    // conv.data.previousIntent = conv.data.currentIntent
+    conv.data.currentIntent =  conv.intent;
+  
+    console.log("Previous Intent : " + conv.data.previousIntent);
+  
+    var speech = new Speech();
+    speech.audio(lodash.sample(library.description.prompt))
+    // speech.audio('https://am.jpmorgan.com/blob-gim/1383563672379/83456/0.0-welcome.ru.1.mp3')
+    //make it ssml
+    var speechOutput = speech.ssml();
+
+    const repromptCount = parseInt(conv.arguments.get('REPROMPT_COUNT'));
+    if (repromptCount === 0) {
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Description",
+        }));
+        // conv.ask('<speak><audio src="https://am.jpmorgan.com/blob-gim/1383563672379/83456/0.0-welcome.ru.1.mp3"></speak>')
+        // conv.ask(`I am from default welcome intent, can you please repeat ?`);
+    } else if (repromptCount === 1) {
+    // conv.ask(`Sorry I didn't catch that. Could you repeat yourself?`);
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Description",
+        }));
+    } else if (conv.arguments.get('IS_FINAL_REPROMPT')) {
+
+        var speechEnd = new Speech();
+        speechEnd.audio(lodash.sample(main.goodbye.prompt))
+
+        //make it ssml
+        var speechEndOutput = speech.ssml();
+
+        conv.close(new SimpleResponse({
+            speech: speechEndOutput,
+            text: main.goodbye.text,
+        }));
+        // conv.close(`Okay let's try this again later.`);
+    }
+});
+
+app.intent('Default Welcome Intent - reprompt', (conv) => {
+    // conv.data.previousIntent = conv.data.currentIntent
+    conv.data.currentIntent = (conv.data.currentIntent === 'NewWelcomeIntent')? 'NewWelcomeIntent' : 'WelcomeIntent';
+  
+    console.log("Previous Intent : " + conv.data.previousIntent);
+  
+    var speech = new Speech();
+    speech.audio(lodash.sample(main.welcome.reprompt))
+    // speech.audio('https://am.jpmorgan.com/blob-gim/1383563672379/83456/0.0-welcome.ru.1.mp3')
+    //make it ssml
+    var speechOutput = speech.ssml();
+
+    const repromptCount = parseInt(conv.arguments.get('REPROMPT_COUNT'));
+    if (repromptCount === 0) {
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Welcome",
+        }));
+        // conv.ask('<speak><audio src="https://am.jpmorgan.com/blob-gim/1383563672379/83456/0.0-welcome.ru.1.mp3"></speak>')
+        // conv.ask(`I am from default welcome intent, can you please repeat ?`);
+    } else if (repromptCount === 1) {
+    // conv.ask(`Sorry I didn't catch that. Could you repeat yourself?`);
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Welcome",
+        }));
+    } else if (conv.arguments.get('IS_FINAL_REPROMPT')) {
+
+        var speechEnd = new Speech();
+        speechEnd.audio(lodash.sample(main.goodbye.prompt))
+
+        //make it ssml
+        var speechEndOutput = speech.ssml();
+
+        conv.close(new SimpleResponse({
+            speech: speechEndOutput,
+            text: main.goodbye.text,
+        }));
+        // conv.close(`Okay let's try this again later.`);
+    }
+});
+
+
+app.intent('Default Fallback Intent - reprompt', (conv) => {
+    // conv.data.previousIntent = conv.data.currentIntent
+    console.log("Previous Intent : " + conv.data.previousIntent);
+  
+    var speech = new Speech();
+    speech.audio(lodash.sample(library.unhandled.prompt))
+    // speech.audio('https://am.jpmorgan.com/blob-gim/1383563672379/83456/0.0-welcome.ru.1.mp3')
+    //make it ssml
+    var speechOutput = speech.ssml();
+
+    const repromptCount = parseInt(conv.arguments.get('REPROMPT_COUNT'));
+    if (repromptCount === 0) {
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Fallback",
+        }));
+        // conv.ask('<speak><audio src="https://am.jpmorgan.com/blob-gim/1383563672379/83456/0.0-welcome.ru.1.mp3"></speak>')
+        // conv.ask(`I am from default welcome intent, can you please repeat ?`);
+    } else if (repromptCount === 1) {
+    // conv.ask(`Sorry I didn't catch that. Could you repeat yourself?`);
+        conv.ask(new SimpleResponse({
+            speech: speechOutput,
+            text: "Fallback",
+        }));
+    } else if (conv.arguments.get('IS_FINAL_REPROMPT')) {
+
+        var speechEnd = new Speech();
+        speechEnd.audio(lodash.sample(main.goodbye.prompt))
+
+        //make it ssml
+        var speechEndOutput = speech.ssml();
+
+        conv.close(new SimpleResponse({
+            speech: speechEndOutput,
+            text: main.goodbye.text,
+        }));
+        // conv.close(`Okay let's try this again later.`);
+    }
+});
+
 // app.intent('Default Fallback Intent', (conv) => {
 app.fallback((conv) => {
 
@@ -209,9 +353,6 @@ app.fallback((conv) => {
 
     console.log("going to fallback...")
 
-    // console.log('-----------------fallback ------------------------');
-    // console.log(JSON.stringify(conv));
-    // console.log('-----------------fallback ------------------------');
     var speech = new Speech();
     speech.audio(lodash.sample(library.unhandled.prompt));
     //make it ssml
